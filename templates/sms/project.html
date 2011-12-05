@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% block head_title %}{% trans "Edit Survey Project" %}{% endblock %}
+
+{% block content %}
+
+   {% if error %}
+    {{ error }}
+    {% endif %}
+
+    <h3>{% trans "Edit Survey Project:" %}</h3>
+
+     <form action="/sms/save_project" method="post">
+       {% csrf_token %}
+       {{ form.as_p }}
+       <p><input type="submit" value="Save Project" /></p>
+     </form>
+
+     <form action="/sms/delete_project/{{form.id.value}}/" method="post">
+       {% csrf_token %}
+      <p><input type="submit" value="Delete Project" /></p>
+     </form>
+
+{% endblock %}

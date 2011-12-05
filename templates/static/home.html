@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+<div id="intro">
+  <h2 class="intro"><span>Survey Tool</span><br/>Mobile web and SMS surveys</h2>
+
+</div>
+  {% if user.is_authenticated %}
+      {% if user.is_staff %}
+         {% url sms as send_sms_url %}
+         {% url new_project as new_project_url %}
+         {% url projects as projects_url %}
+           <ul>
+	      <li>{% blocktrans %}<a href="{{ send_sms_url }}">Send a text</a>{% endblocktrans %}</li>
+
+              <li>{% blocktrans %}<a href="{{ new_project_url }}">Make a new
+                Survey Project </a>{% endblocktrans %} </li>
+
+              <li>{% blocktrans %}<a href="{{ projects_url }}">List
+		Survey Projects </a>{% endblocktrans %} </li>
+	    </ul>
+		
+     {% endif %}
+   {% endif %}
+
+{% endblock %}
+
+
+

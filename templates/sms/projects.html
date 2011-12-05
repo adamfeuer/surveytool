@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% block head_title %}{% trans "Survey Projects" %}{% endblock %}
+
+{% block content %}
+
+   {% if error %}
+    {{ error }}
+    {% endif %}
+
+    <h3>{% trans "Survey projects:" %}</h3>
+
+    <ul>
+    {% for project in projects %}
+       <li><a href="project/{{project.id}}">{{ project.name }}</a></li>
+    {% endfor %}
+    </ul>
+      
+{% endblock %}

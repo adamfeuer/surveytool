@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% block head_title %}{% trans "Welcome" %}{% endblock %}
+
+{% block tab_id %}id="home_tab"{% endblock %}
+
+{% block content %}
+
+    <p>{% trans "This form sends a text message." %} <p/>
+
+    {% if error %}
+    {{ error }}
+    {% endif %}
+
+    <h3>{% trans "Send a text:" %}</h3>
+
+     <form action="/sms/sms" method="post">
+       {% csrf_token %}
+       {{ form.as_p }}
+       <input type="submit" value="Send" />
+       </form>
+
+{% endblock %}

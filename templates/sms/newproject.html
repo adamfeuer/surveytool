@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% block head_title %}{% trans "New Survey Project" %}{% endblock %}
+
+{% block content %}
+
+   {% if error %}
+    {{ error }}
+    {% endif %}
+
+    <h3>{% trans "Make a new survey project:" %}</h3>
+
+     <form action="/sms/new_project" method="post">
+       {% csrf_token %}
+       {{ form.as_p }}
+       <input type="submit" value="New Project" />
+       </form>
+
+{% endblock %}
