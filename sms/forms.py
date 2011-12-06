@@ -20,6 +20,10 @@ class ProjectModelMultipleChoiceField(forms.ModelMultipleChoiceField):
    def label_from_instance(self, project_obj):
       return "%s" % project_obj.name
 
+class ProjectModelChoiceField(forms.ModelChoiceField):
+   def label_from_instance(self, project_obj):
+      return "%s" % project_obj.name
+
 class SmsForm(forms.Form):
    message = forms.CharField(max_length=160,widget=forms.Textarea)
    phone_number = forms.CharField()
@@ -39,3 +43,16 @@ class ProjectForm(forms.Form):
 
 class SurveysForm(forms.Form):
    surveys = ProjectModelMultipleChoiceField(queryset=Project.objects.all(), required=False)
+
+class MessageForm(forms.Form):
+   id = forms.IntegerField(widget=forms.HiddenInput, required=False)
+   project = ProjectModelChoiceField(queryset=Project.objects.all())
+   phone_number = forms.CharField(max_length=50, required=False)
+   email = forms.EmailField(required=False)
+   message = forms.CharField(max_length=160, widget=forms.Textarea(attrs={'rows':2, 'cols':20}), required=False)
+   sent = get_datetime_field()
+   sent_status = forms.BooleanField(required=False)
+   sent_message = forms.CharField(max_length=200, required=False)
+   created = get_datetime_field()
+   modifed = get_datetime_field()
+

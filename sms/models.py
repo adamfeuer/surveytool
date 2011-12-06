@@ -37,3 +37,17 @@ class Membership(models.Model):
    
    def __unicode__(self):
       return "'%s': '%s'" % (self.user, self.project)
+
+class Message(models.Model):
+   project = models.ForeignKey(Project)
+   phone_number = models.CharField(max_length=50)
+   email = models.EmailField()
+   message = models.CharField(max_length=160)
+   sent = models.DateTimeField()
+   sent_status = models.BooleanField()
+   sent_message = models.CharField(max_length=200)
+   created = CreationDateTimeField()
+   modifed = ModificationDateTimeField()
+   
+   def __unicode__(self):
+      return "'%s': '%s %s'" % (self.project, self.phone_number, self.message)

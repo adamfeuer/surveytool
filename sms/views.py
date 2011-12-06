@@ -8,8 +8,8 @@ from django.contrib.auth.decorators import permission_required, login_required, 
 from django.shortcuts import redirect, render_to_response, get_object_or_404
 from django.contrib.auth.models import User
 
-from forms import SmsForm, ProjectForm, SurveysForm
-from models import Project, Membership
+from forms import SmsForm, ProjectForm, SurveysForm, MessageForm
+from models import Project, Membership, Message
 from smsutil import SmsSender
 
 DATETIME_FORMAT="%m/%d/%Y %H:%M"
@@ -120,6 +120,21 @@ def surveys_select(request, username):
                              {'form': form },
                              context_instance=RequestContext(request))
 
+@login_required
+@user_passes_test(lambda u: u.is_staff)
+def new_message(request):
+   if request.method == 'POST': 
+      form = MessageForm(request.POST) 
+      if form.is_valid(): 
+         newMessage = Message()
+         #save(newMessage, form)
+         return HttpResponseRedirect('/sms/messages')
+   else:
+      form = MessageForm()
+   return render_to_response('sms/newmessage.html',
+                             {'form': form },
+                             context_instance=RequestContext(request))
+    
 def get_surveys(user):
    memberships = Membership.objects.filter(user = user.id)
    return [membership.project for membership in memberships]
@@ -173,3 +188,5 @@ def format_datetime(datetime_obj):
 
 def format_time(datetime_obj):
    return datetime_obj.strftime(TIME_FORMAT)
+
+
