@@ -6,9 +6,9 @@ This application is a front-end for the Funnel survey tool and the Twilio
 phone-sms service that enables users to send surveys via SMS and collect
 the data into a spreadsheet via Funnel. 
 
-http://en.wikipedia.org/wiki/Experience_sampling_method
-
 ESM surveys are often used to study peoples' mental states. 
+
+http://en.wikipedia.org/wiki/Experience_sampling_method
 
 Mihály Csíkszentmihályi used ESM surveys to formulate his idea of the flow
 mental state. 
