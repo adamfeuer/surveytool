@@ -10,6 +10,8 @@
          {% url sms as send_sms_url %}
          {% url new_project as new_project_url %}
          {% url projects as projects_url %}
+         {% url messages as messages_url %}
+         {% url new_message as new_message_url %}
            <ul>
 	      <li>{% blocktrans %}<a href="{{ send_sms_url }}">Send a text</a>{% endblocktrans %}</li>
 
@@ -18,6 +20,10 @@
 
               <li>{% blocktrans %}<a href="{{ projects_url }}">List
 		Survey Projects </a>{% endblocktrans %} </li>
+              <li>{% blocktrans %}<a href="{{ new_message_url }}">Make
+		a new SMS or Email message </a>{% endblocktrans %} </li>
+              <li>{% blocktrans %}<a href="{{ messages_url }}">List
+		SMS and Email messages </a>{% endblocktrans %} </li>
 	    </ul>
 		
      {% endif %}

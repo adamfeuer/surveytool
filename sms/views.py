@@ -7,6 +7,7 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import permission_required, login_required, user_passes_test 
 from django.shortcuts import redirect, render_to_response, get_object_or_404
 from django.contrib.auth.models import User
+from django.contrib import messages
 
 from forms import SmsForm, ProjectForm, SurveysForm, MessageForm
 from models import Project, Membership, Message
@@ -134,6 +135,15 @@ def new_message(request):
    return render_to_response('sms/newmessage.html',
                              {'form': form },
                              context_instance=RequestContext(request))
+
+@login_required
+@user_passes_test(lambda u: u.is_staff)
+def messages(request):
+   sms_messages = Message.objects.all().order_by('send_at')
+   return render_to_response('sms/messages.html',
+                             { 'sms_messages' : sms_messages },
+                             context_instance=RequestContext(request))
+
     
 def get_surveys(user):
    memberships = Membership.objects.filter(user = user.id)

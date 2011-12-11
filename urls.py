@@ -22,6 +22,7 @@ urlpatterns = patterns('',
     url(r'^sms/save_project$', 'sms.views.save_project', name="save_project"),
     (r'^sms/delete_project/(?P<project_id>\d+)/$', 'sms.views.delete_project'),
     (r'^sms/project/(?P<project_id>\d+)/$', 'sms.views.project'),
+    url(r'^sms/messages$', 'sms.views.messages', name="messages"),
     url(r'^sms/new_message$', 'sms.views.new_message', name="new_message"),
 )
 

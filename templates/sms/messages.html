@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% block head_title %}{% trans "SMS and Email Messages" %}{% endblock %}
+
+{% block content %}
+
+   {% if error %}
+    {{ error }}
+    {% endif %}
+
+    <h3>{% trans "SMS and Email Messages:" %}</h3>
+
+    <table class="message-table"> 
+       <tr>
+         <th>Id</th> 
+         <th>User Id</th>
+         <th>Phone Number</th>
+         <th>Email</th>
+         <th>Message</th>
+         <th>Send At</th>
+         <th>Sent</th>
+         <th>Sent Status</th>
+         <th>Error message</th> 
+         <th>Edit</th> 
+         <th>Delete</th> 
+       </tr>
+      {% for message in sms_messages %}
+       <tr>
+         <td>{{ message.id }}</td> 
+         <td>{{ message.user_id }}</td>
+         <td>{{ message.phone_number }}</td>
+         <td>{{ message.email }}</td>
+         <td>{{ message.message }}</td> 
+         <td>{{ message.send_at }}</td>
+         <td>{{ message.sent }}</td>
+         <td>{{ message.sent_status }}</td>
+         <td>{{ message.sent_error_message }}</td> 
+         <td><a href="edit_message/{{message.id}}">Edit</a></td> 
+         <td><a href="delete_message/{{message.id}}">Delete</a></td> 
+       </tr>
+      {% endfor %}
+    </table>
+      
+{% endblock %}
