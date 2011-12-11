@@ -7,7 +7,7 @@ class Setting(models.Model):
    value = models.CharField(max_length=500)
    description = models.CharField(max_length=500)
    created = CreationDateTimeField()
-   modifed = ModificationDateTimeField()
+   modified = ModificationDateTimeField()
     
    def __unicode__(self):
       return self.name
@@ -24,7 +24,7 @@ class Project(models.Model):
    day_end_time = models.TimeField()
    members = models.ManyToManyField(User, through='Membership') 
    created = CreationDateTimeField()
-   modifed = ModificationDateTimeField()
+   modified = ModificationDateTimeField()
    
    def __unicode__(self):
       return self.name
@@ -33,21 +33,23 @@ class Membership(models.Model):
    user = models.ForeignKey(User)
    project = models.ForeignKey(Project)
    created = CreationDateTimeField()
-   modifed = ModificationDateTimeField()
+   modified = ModificationDateTimeField()
    
    def __unicode__(self):
       return "'%s': '%s'" % (self.user, self.project)
 
 class Message(models.Model):
    project = models.ForeignKey(Project)
-   phone_number = models.CharField(max_length=50)
+   user_id = models.CharField(max_length=100)
+   phone_number = models.CharField(max_length=100)
    email = models.EmailField()
    message = models.CharField(max_length=160)
+   send_at = models.DateTimeField()
    sent = models.DateTimeField()
    sent_status = models.BooleanField()
-   sent_message = models.CharField(max_length=200)
+   sent_error_message = models.CharField(max_length=200)
    created = CreationDateTimeField()
-   modifed = ModificationDateTimeField()
+   modified = ModificationDateTimeField()
    
    def __unicode__(self):
       return "'%s': '%s %s'" % (self.project, self.phone_number, self.message)

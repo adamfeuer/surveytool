@@ -38,7 +38,7 @@ def new_project(request):
       form = ProjectForm(request.POST) 
       if form.is_valid(): 
          newProject = Project()
-         save(newProject, form)
+         save_project(newProject, form)
          return HttpResponseRedirect('/sms/projects')
    else:
       form = ProjectForm(initial={'start_datetime':formatted_datetime(),
@@ -83,7 +83,7 @@ def save_project(request):
       form = ProjectForm(request.POST) 
       if form.is_valid(): 
          newProject = Project.objects.get(pk=form.cleaned_data['id'])
-         save(newProject, form)
+         save_project(newProject, form)
          return HttpResponseRedirect('/sms/projects') 
    else:
        form = ProjectForm()
@@ -127,8 +127,8 @@ def new_message(request):
       form = MessageForm(request.POST) 
       if form.is_valid(): 
          newMessage = Message()
-         #save(newMessage, form)
-         return HttpResponseRedirect('/sms/messages')
+         save_message(newMessage, form)
+         return HttpResponseRedirect('/') #/sms/messages
    else:
       form = MessageForm()
    return render_to_response('sms/newmessage.html',
@@ -156,7 +156,7 @@ def save_memberships(user, project, form):
       membership.save()
    return
 
-def save(project, form):
+def save_project(project, form):
    project.name = form.cleaned_data['name']
    project.survey_url = form.cleaned_data['survey_url']
    project.smartphone_message = form.cleaned_data['smartphone_message']
@@ -167,6 +167,19 @@ def save(project, form):
    project.day_start_time = clean_time(form.cleaned_data['day_start_time'])
    project.day_end_time = clean_time(form.cleaned_data['day_end_time'])
    project.save()
+   return
+
+def save_message(message, form):
+   message.project = form.cleaned_data['project']
+   message.user_id = form.cleaned_data['user_id']
+   message.phone_number = form.cleaned_data['phone_number']
+   message.email = form.cleaned_data['email']
+   message.message = form.cleaned_data['message']
+   message.send_at = clean_datetime(form.cleaned_data['send_at'])
+   message.sent = clean_datetime(form.cleaned_data['sent'])
+   message.sent_status = form.cleaned_data['sent_status']
+   message.sent_error_message = form.cleaned_data['sent_error_message']
+   message.save()
    return
 
 def clean_datetime(datetime_obj):

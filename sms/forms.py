@@ -47,12 +47,12 @@ class SurveysForm(forms.Form):
 class MessageForm(forms.Form):
    id = forms.IntegerField(widget=forms.HiddenInput, required=False)
    project = ProjectModelChoiceField(queryset=Project.objects.all())
-   phone_number = forms.CharField(max_length=50, required=False)
+   user_id = forms.CharField(max_length=100, required=False)
+   phone_number = forms.CharField(max_length=100, required=False)
    email = forms.EmailField(required=False)
    message = forms.CharField(max_length=160, widget=forms.Textarea(attrs={'rows':2, 'cols':20}), required=False)
+   send_at = get_datetime_field()
    sent = get_datetime_field()
    sent_status = forms.BooleanField(required=False)
-   sent_message = forms.CharField(max_length=200, required=False)
-   created = get_datetime_field()
-   modifed = get_datetime_field()
+   sent_error_message = forms.CharField(max_length=200, required=False)
 
