@@ -144,6 +144,12 @@ def messages(request):
                              { 'sms_messages' : sms_messages },
                              context_instance=RequestContext(request))
 
+@login_required
+@user_passes_test(lambda u: u.is_staff)
+def delete_message(request, message_id):
+   m = get_object_or_404(Message, pk=message_id)
+   m.delete()
+   return HttpResponseRedirect('/sms/messages')
     
 def get_surveys(user):
    memberships = Membership.objects.filter(user = user.id)

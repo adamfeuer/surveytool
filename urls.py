@@ -24,6 +24,7 @@ urlpatterns = patterns('',
     (r'^sms/project/(?P<project_id>\d+)/$', 'sms.views.project'),
     url(r'^sms/messages$', 'sms.views.messages', name="messages"),
     url(r'^sms/new_message$', 'sms.views.new_message', name="new_message"),
+    (r'^sms/delete_message/(?P<message_id>\d+)/$', 'sms.views.delete_message'),
 )
 
 if settings.DEBUG:
