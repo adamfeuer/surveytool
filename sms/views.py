@@ -45,7 +45,7 @@ def new_project(request):
       form = ProjectForm(initial={'start_datetime':formatted_datetime(),
                                   'end_datetime' : formatted_datetime(),
                                   'messages_per_day': 1})
-   return render_to_response('sms/newproject.html',
+   return render_to_response('sms/new_project.html',
                              {'form': form },
                              context_instance=RequestContext(request))
     
@@ -132,7 +132,7 @@ def new_message(request):
          return HttpResponseRedirect('/') #/sms/messages
    else:
       form = MessageForm()
-   return render_to_response('sms/newmessage.html',
+   return render_to_response('sms/new_message.html',
                              {'form': form },
                              context_instance=RequestContext(request))
 
