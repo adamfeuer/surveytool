@@ -39,7 +39,7 @@ def new_project(request):
       form = ProjectForm(request.POST) 
       if form.is_valid(): 
          newProject = Project()
-         save_project(newProject, form)
+         save_project_from_form(newProject, form)
          return HttpResponseRedirect('/sms/projects')
    else:
       form = ProjectForm(initial={'start_datetime':formatted_datetime(),
@@ -60,7 +60,7 @@ def projects(request):
 
 @login_required
 @user_passes_test(lambda u: u.is_staff)
-def project(request, project_id):
+def edit_project(request, project_id):
    p = get_object_or_404(Project, pk=project_id)
    form = ProjectForm({ 'name' : p.name,
                         'id' : p.id,
@@ -73,7 +73,7 @@ def project(request, project_id):
                         'day_start_time' : format_time(p.day_start_time),
                         'day_end_time' : format_time(p.day_end_time)
                         })
-   return render_to_response('sms/project.html',
+   return render_to_response('sms/edit_project.html',
                              {'form': form },
                              context_instance=RequestContext(request))
 
@@ -84,12 +84,12 @@ def save_project(request):
       form = ProjectForm(request.POST) 
       if form.is_valid(): 
          newProject = Project.objects.get(pk=form.cleaned_data['id'])
-         save_project(newProject, form)
+         save_project_from_form(newProject, form)
          return HttpResponseRedirect('/sms/projects') 
    else:
        form = ProjectForm()
 
-   return render_to_response('sms/project.html',
+   return render_to_response('sms/edit_project.html',
                              {'form': form },
                              context_instance=RequestContext(request))
 
@@ -109,7 +109,7 @@ def surveys_select(request, username):
    if request.method == 'POST': 
       form = SurveysForm(request.POST) 
       if form.is_valid():
-         save_memberships(user, project, form)
+         save_memberships_from_form(user, project, form)
          return HttpResponseRedirect('/accounts/%s/' % username) 
    else:
       survey_queryset = get_surveys(user)
@@ -128,8 +128,8 @@ def new_message(request):
       form = MessageForm(request.POST) 
       if form.is_valid(): 
          newMessage = Message()
-         save_message(newMessage, form)
-         return HttpResponseRedirect('/') #/sms/messages
+         save_message_from_from(newMessage, form)
+         return HttpResponseRedirect('/sms/messages')
    else:
       form = MessageForm()
    return render_to_response('sms/new_message.html',
@@ -146,33 +146,66 @@ def messages(request):
 
 @login_required
 @user_passes_test(lambda u: u.is_staff)
+def edit_message(request, message_id):
+   m = get_object_or_404(Message, pk=message_id)
+   print m.id, m.phone_number, m.send_at
+   form = MessageForm({ 'id' : m.id,
+                        'project' : m.project,
+                        'user_id' : m.user_id,
+                        'phone_number' : m.phone_number,
+                        'email' : m.email,
+                        'message' : m.message,
+                        'send_at' : format_datetime(m.send_at),
+                        'sent' : m.sent,
+                        'sent_status' : m.sent_status,
+                        'sent_error_message' : m.sent_error_message,
+                        })
+   return render_to_response('sms/edit_message.html',
+                             {'form': form },
+                             context_instance=RequestContext(request))
+
+@login_required
+@user_passes_test(lambda u: u.is_staff)
 def delete_message(request, message_id):
    m = get_object_or_404(Message, pk=message_id)
    m.delete()
    return HttpResponseRedirect('/sms/messages')
     
+@login_required
+@user_passes_test(lambda u: u.is_staff)
+def save_message(request):
+   if request.method == 'POST': 
+      form = MessageForm(request.POST) 
+      if form.is_valid(): 
+         newMessage = Message.objects.get(pk=form.cleaned_data['id'])
+         save_message_from_form(newMessage, form)
+         return HttpResponseRedirect('/sms/messages') 
+   else:
+       form = MessageForm()
+
+   return render_to_response('sms/edit_message.html',
+                             {'form': form },
+                             context_instance=RequestContext(request))
+
 def get_surveys(user):
    memberships = Membership.objects.filter(user = user.id)
    return [membership.project for membership in memberships]
 
-def save_memberships(user, project, form):
-   print "Form data:"
+def save_memberships_from_form(user, project, form):
    print "%d: %s %s" % (user.id, user.first_name, user.last_name)
    for project in form.cleaned_data['surveys']:
       print project.id, project.name
-   print "Deleting existing table data:"
    memberships = Membership.objects.filter(user = user.id)
    for membership in memberships:
       print membership
       membership.delete()
-   print "Saving form data:"
    for project in form.cleaned_data['surveys']:
       membership = Membership(user = user, project = project)
       print membership
       membership.save()
    return
 
-def save_project(project, form):
+def save_project_from_form(project, form):
    project.name = form.cleaned_data['name']
    project.survey_url = form.cleaned_data['survey_url']
    project.smartphone_message = form.cleaned_data['smartphone_message']
@@ -185,7 +218,7 @@ def save_project(project, form):
    project.save()
    return
 
-def save_message(message, form):
+def save_message_from_form(message, form):
    message.project = form.cleaned_data['project']
    message.user_id = form.cleaned_data['user_id']
    message.phone_number = form.cleaned_data['phone_number']

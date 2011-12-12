@@ -15,7 +15,7 @@
      <form action="/sms/new_message" method="post">
        {% csrf_token %}
        {{ form.as_p }}
-       <input type="submit" value="New Message" />
+       <p><input type="submit" value="New Message" /></p>
        </form>
 
 {% endblock %}

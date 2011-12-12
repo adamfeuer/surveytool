@@ -10,11 +10,11 @@ def get_time_field():
 
 class StrippingTimeField(forms.TimeField):
    def to_python(self, value):
-      super(StrippingTimeField, self).to_python(value.strip())      
+      return super(StrippingTimeField, self).to_python(value.strip())      
     
 class StrippingDateTimeField(forms.DateTimeField):
    def to_python(self, value):
-      super(StrippingDateTimeField, self).to_python(value.strip())      
+      return super(StrippingDateTimeField, self).to_python(value.strip())      
     
 class ProjectModelMultipleChoiceField(forms.ModelMultipleChoiceField):
    def label_from_instance(self, project_obj):
