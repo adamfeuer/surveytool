@@ -100,6 +100,7 @@ INSTALLED_APPS = (
     'south',
     'userena',
     'userena.contrib.umessages',
+    'cronjobs',
     'surveytool.profiles',
     'surveytool.sms',
 
