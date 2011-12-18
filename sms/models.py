@@ -46,10 +46,22 @@ class Message(models.Model):
    message = models.CharField(max_length=160)
    send_at = models.DateTimeField()
    sent = models.BooleanField()
-   sent_status = models.CharField(max_length=100)
+   sent_status = models.BooleanField()
    sent_error_message = models.CharField(max_length=200)
    created = CreationDateTimeField()
    modified = ModificationDateTimeField()
    
    def __unicode__(self):
       return "'%s': '%s %s'" % (self.project, self.phone_number, self.message)
+   
+class UserDetails(models.Model):
+   user = models.ForeignKey(User)
+   phone_number = models.CharField(max_length=100)
+   smartphone = models.BooleanField()
+   no_messages = models.BooleanField()
+   created = CreationDateTimeField()
+   modified = ModificationDateTimeField()
+   
+   def __unicode__(self):
+      return "'%s': '%s'" % (self.user, self.project)
+

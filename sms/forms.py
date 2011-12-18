@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from sms.models import Project, Membership
+from sms.models import Project, Membership, UserDetails
 
 def get_datetime_field():
    return StrippingDateTimeField(required=False, widget=forms.TextInput(attrs={'class':'jquery-datetime'}))
@@ -43,6 +43,10 @@ class ProjectForm(forms.Form):
 
 class SurveysForm(forms.Form):
    surveys = ProjectModelMultipleChoiceField(queryset=Project.objects.all(), required=False)
+   user_id = forms.IntegerField(widget=forms.HiddenInput, required=False)
+   phone_number = forms.CharField(max_length=100, required=False)
+   smartphone = forms.BooleanField(required=False)
+   no_messages = forms.BooleanField(required=False)
 
 class MessageForm(forms.Form):
    id = forms.IntegerField(widget=forms.HiddenInput, required=False)
@@ -53,6 +57,5 @@ class MessageForm(forms.Form):
    message = forms.CharField(max_length=160, widget=forms.Textarea(attrs={'rows':2, 'cols':20}), required=False)
    send_at = get_datetime_field()
    sent = forms.BooleanField(required=False)
-   sent_status = forms.CharField(max_length=100, required=False)
+   sent_status = forms.BooleanField(required=False)
    sent_error_message = forms.CharField(max_length=200, required=False)
-

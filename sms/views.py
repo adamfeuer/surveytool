@@ -10,7 +10,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 
 from forms import SmsForm, ProjectForm, SurveysForm, MessageForm
-from models import Project, Membership, Message
+from models import Project, Membership, Message, UserDetails
 from smsutil import SmsSender
 
 DATETIME_FORMAT="%m/%d/%Y %H:%M"
@@ -22,7 +22,7 @@ def sms(request):
    if request.method == 'POST': 
       form = SmsForm(request.POST)
       if form.is_valid():
-         result = SmsSender().send(form.cleaned_data['message'], form.cleaned_data["phone_number"])
+         result = SmsSender().send(form.cleaned_data["phone_number"], form.cleaned_data['message'])
          print result.status, result.message
          return HttpResponseRedirect('/') 
    else:
@@ -109,12 +109,16 @@ def surveys_select(request, username):
    if request.method == 'POST': 
       form = SurveysForm(request.POST) 
       if form.is_valid():
-         save_memberships_from_form(user, project, form)
+         save_memberships_from_form(user, form)
          return HttpResponseRedirect('/accounts/%s/' % username) 
    else:
       survey_queryset = get_surveys(user)
-      print survey_queryset
-      initial_dict={'surveys' : survey_queryset}
+      user_details = get_user_details(user)
+      initial_dict={'surveys' : survey_queryset,
+                    'user': user_details.user.id,
+                    'phone_number': user_details.phone_number,
+                    'smartphone': user_details.smartphone,
+                    'no_messages': user_details.no_messages}
       form = SurveysForm(initial=initial_dict)  
      
    return render_to_response('userena/survey_form.html',
@@ -128,7 +132,7 @@ def new_message(request):
       form = MessageForm(request.POST) 
       if form.is_valid(): 
          newMessage = Message()
-         save_message_from_from(newMessage, form)
+         save_message_from_form(newMessage, form)
          return HttpResponseRedirect('/sms/messages')
    else:
       form = MessageForm()
@@ -191,18 +195,34 @@ def get_surveys(user):
    memberships = Membership.objects.filter(user = user.id)
    return [membership.project for membership in memberships]
 
-def save_memberships_from_form(user, project, form):
-   print "%d: %s %s" % (user.id, user.first_name, user.last_name)
-   for project in form.cleaned_data['surveys']:
-      print project.id, project.name
+def get_user_details(user):
+   user_details_list = UserDetails.objects.filter(user = user.id)
+   if len(user_details_list) == 0:
+      user_details = UserDetails()
+      user_details.user = user
+      user_details.smartphone = True
+      user_details.no_messages = False
+      user_details.save()
+      return user_details
+   else:
+      return user_details_list[0]
+
+def save_memberships_from_form(user, form):
    memberships = Membership.objects.filter(user = user.id)
    for membership in memberships:
-      print membership
       membership.delete()
    for project in form.cleaned_data['surveys']:
       membership = Membership(user = user, project = project)
-      print membership
       membership.save()
+   user_details_list = UserDetails.objects.filter(user = user.id)
+   if (len(user_details_list) > 0):
+      user_details = user_details_list[0]
+   else:
+      user_details = UserDetails()
+   user_details.phone_number = form.cleaned_data['phone_number']
+   user_details.smartphone = form.cleaned_data['smartphone']
+   user_details.no_messages = form.cleaned_data['no_messages']
+   user_details.save()
    return
 
 def save_project_from_form(project, form):

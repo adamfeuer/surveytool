@@ -17,7 +17,7 @@ class SmsSender:
       token = os.environ['TWILIO_TOKEN']
       self.client = TwilioRestClient(account, token)
 
-   def send(self, message, phoneNumber):
+   def send(self, phoneNumber, message):
       phoneNumberWithPlus = "+" + phoneNumber
       try:
          message = self.client.sms.messages.create(to=phoneNumberWithPlus,

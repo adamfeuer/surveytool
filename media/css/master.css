@@ -561,9 +561,9 @@ p.forgot-password{
 ul#profile-nav{
     height: 40px;
     position: absolute;
-    right: 25px;
+    right: 10px;
     top: -47px;
-    width: 650px;   
+    width: 700px;   
 }
 
 ul#profile-nav li{
