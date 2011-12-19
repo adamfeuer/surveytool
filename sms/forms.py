@@ -6,7 +6,7 @@ def get_datetime_field():
    return StrippingDateTimeField(required=False, widget=forms.TextInput(attrs={'class':'jquery-datetime'}))
     
 def get_time_field():
-   return StrippingTimeField(required=False, widget=forms.TextInput(attrs={'class':'jquery-time'}))
+   return StrippingTimeField(required=False, widget=forms.TimeInput(format="%H:%M", attrs={'class':'jquery-time'}))
 
 class StrippingTimeField(forms.TimeField):
    def to_python(self, value):
@@ -37,6 +37,8 @@ class ProjectForm(forms.Form):
    start_datetime = get_datetime_field()
    end_datetime = get_datetime_field()
    messages_per_day = forms.IntegerField(required=True, min_value=0, max_value=9999)
+   guard_time_minutes = forms.IntegerField(min_value=0, max_value=1440)
+   synchronize_messages = forms.BooleanField(required=False)
    day_start_time = get_time_field()
    day_end_time = get_time_field()
 

@@ -16,6 +16,12 @@ from smsutil import SmsSender
 DATETIME_FORMAT="%m/%d/%Y %H:%M"
 TIME_FORMAT="%H:%M"
 
+DEFAULT_MESSAGES_PER_DAY = 7
+DEFAULT_GUARD_TIME_MINUTES = 90
+DEFAULT_DAY_START_TIME = "09:00"
+DEFAULT_DAY_END_TIME = "21:00"
+
+
 @login_required
 @user_passes_test(lambda u: u.is_staff)
 def sms(request):
@@ -44,7 +50,10 @@ def new_project(request):
    else:
       form = ProjectForm(initial={'start_datetime':formatted_datetime(),
                                   'end_datetime' : formatted_datetime(),
-                                  'messages_per_day': 1})
+                                  'messages_per_day': DEFAULT_MESSAGES_PER_DAY,
+                                  'guard_time_minutes': DEFAULT_GUARD_TIME_MINUTES,
+                                  'day_start_time' : formatted_time(DEFAULT_DAY_START_TIME),
+                                  'day_end_time' : formatted_time(DEFAULT_DAY_END_TIME) })
    return render_to_response('sms/new_project.html',
                              {'form': form },
                              context_instance=RequestContext(request))
@@ -70,6 +79,8 @@ def edit_project(request, project_id):
                         'start_datetime' : format_datetime(p.start_datetime),
                         'end_datetime' : format_datetime(p.end_datetime),
                         'messages_per_day' : p.messages_per_day,
+                        'guard_time_minutes' : p.guard_time_minutes,
+                        'synchronize_messages' : p.synchronize_messages,
                         'day_start_time' : format_time(p.day_start_time),
                         'day_end_time' : format_time(p.day_end_time)
                         })
@@ -233,6 +244,8 @@ def save_project_from_form(project, form):
    project.start_datetime = clean_datetime(form.cleaned_data['start_datetime'])
    project.end_datetime = clean_datetime(form.cleaned_data['end_datetime'])
    project.messages_per_day = form.cleaned_data['messages_per_day']
+   project.guard_time_minutes = clean_integer(form.cleaned_data['guard_time_minutes'])
+   project.synchronize_messages = clean_boolean(form.cleaned_data['synchronize_messages'])
    project.day_start_time = clean_time(form.cleaned_data['day_start_time'])
    project.day_end_time = clean_time(form.cleaned_data['day_end_time'])
    project.save()
@@ -261,6 +274,18 @@ def clean_time(time_obj):
       now = datetime.datetime.now()
       return datetime.time(now.hour, now.minute)
    return time_obj
+
+def clean_boolean(bool_obj):
+   if (bool_obj is None):
+      return False
+   else:
+      return True
+      
+def clean_integer(int_obj):
+   if (int_obj is None):
+      return 0
+   else:
+      return int_obj
       
 def formatted_datetime():
    return format_datetime(datetime.datetime.now())
@@ -270,5 +295,10 @@ def format_datetime(datetime_obj):
 
 def format_time(datetime_obj):
    return datetime_obj.strftime(TIME_FORMAT)
+
+def formatted_time(time_string):
+   time_obj = datetime.datetime.strptime(time_string, TIME_FORMAT)
+   return datetime.time(time_obj.hour, time_obj.minute)
+
 
 

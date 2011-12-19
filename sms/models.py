@@ -20,6 +20,8 @@ class Project(models.Model):
    start_datetime = models.DateTimeField()
    end_datetime = models.DateTimeField()
    messages_per_day = models.IntegerField()
+   guard_time_minutes = models.IntegerField()
+   synchronize_messages = models.BooleanField()
    day_start_time = models.TimeField()
    day_end_time = models.TimeField()
    members = models.ManyToManyField(User, through='Membership') 
