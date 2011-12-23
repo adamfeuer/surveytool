@@ -12,10 +12,17 @@ class MessageGenerator:
    def __init__(self):
       pass
 
-   def getDaySegments(self, startDateTime, endDateTime):
-      segment = DaySegment(startDateTime, endDateTime-startDateTime)
-      return [segment, segment, segment]
-
+   def getDaySegmentsForDates(self, startDateTime, endDateTime):
+      segments = []
+      thisDay = datetime(startDateTime.year, startDateTime.month, startDateTime.day)
+      oneDay = timedelta(1)
+      days = 0
+      while (thisDay < endDateTime):
+         newSegment = DaySegment(thisDay, oneDay)
+         thisDay += oneDay
+         days += 1
+         segments.append(newSegment)
+      return segments
 
    def getDaysBetweenDates(self, startDateTime, endDateTime):
       thisDay = datetime(startDateTime.year, startDateTime.month, startDateTime.day)
@@ -24,4 +31,4 @@ class MessageGenerator:
       while (thisDay < endDateTime):
          thisDay += oneDay
          days += 1
-      return days - 1
+      return days
