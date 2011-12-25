@@ -56,6 +56,9 @@ class MessageGenerator:
 
    def getMessageAtRandomTimeInInterval(self, index, intervalLengthInSeconds):
       return (index * intervalLengthInSeconds) + random.randint(0, intervalLengthInSeconds)
+
+   def getMessageDateTime(self, dayStart, messageSeconds):
+      return dayStart + timedelta(seconds = messageSeconds)
       
    def getMessageDateTimesForSegment(self, segment, messagesPerDay, dayLength, guardTimeMinutes):
       """
@@ -75,14 +78,13 @@ class MessageGenerator:
       interval = 0
       messageDateTimes = []
       messageSeconds = self.getMessageAtRandomTimeInInterval(interval, intervalLengthInSeconds)
-      messageDateTime = segment.dayStart + timedelta(seconds = messageSeconds)
-      messageDateTimes.append(messageDateTime)
+      messageDateTimes.append(self.getMessageDateTime(segment.dayStart, messageSeconds))
       while (interval < messagesPerDay):
          interval += 1
          newMessageSeconds = self.getMessageAtRandomTimeInInterval(interval, intervalLengthInSeconds)
          if ((newMessageSeconds - messageSeconds) < guardTimeInSeconds):
             newMessageSeconds += (guardTimeInSeconds - (newMessageSeconds - messageSeconds))
-         messageDateTime = segment.dayStart + timedelta(seconds = newMessageSeconds)
+         messageDateTime = self.getMessageDateTime(segment.dayStart, newMessageSeconds)
          if (messageDateTime <= segment.dayEnd):
             messageDateTimes.append(messageDateTime)
          messageSeconds = newMessageSeconds
