@@ -133,6 +133,33 @@ class MessageGeneratorTestCase(unittest.TestCase):
       self.verifyDaySegmentsForDates(startDateTime, surveyLengthInDays=3,
                                      expectedNumberOfDays=4)
 
+   def testGetNumberOfMessagesForSegment(self):
+      messagesPerDay = 7
+      dayStart = time(hour = 9, minute = 0, second = 0)
+      dayEnd = time(hour = 21, minute = 0, second = 0)
+      startDateTime = datetime(2011, 12, 25, 0, 0, 0)
+      endDateTime = datetime(2011, 12, 25, 23, 59, 59)
+      length = endDateTime - startDateTime
+      segment = DaySegment(startDateTime, length, dayStart, dayEnd)
+      expectedMessagesForSegment = messagesPerDay
+      dayLength = datetime(2011, 12, 25, dayEnd.hour, dayEnd.minute, dayEnd.second) - datetime(2011, 12, 25, dayStart.hour, dayStart.minute, dayStart.second)
+      result = self.messageGenerator.getNumberOfMessagesForSegment(segment, messagesPerDay, dayLength)
+      self.assertEqual(expectedMessagesForSegment, result)
+
+   def testGetNumberOfMessagesForSegmentPartialDay(self):
+      messagesPerDay = 7
+      dayStart = time(hour = 9, minute = 0, second = 0)
+      dayEnd = time(hour = 21, minute = 0, second = 0)
+      startDateTime = datetime(2011, 12, 25, 19, 0, 0)
+      endDateTime = datetime(2011, 12, 25, 21, 0, 0)
+      length = endDateTime - startDateTime
+      segment = DaySegment(startDateTime, length, dayStart, dayEnd)
+      segment.setDayStart(startDateTime)
+      expectedMessagesForSegment = 1
+      dayLength = datetime(2011, 12, 25, dayEnd.hour, dayEnd.minute, dayEnd.second) - datetime(2011, 12, 25, dayStart.hour, dayStart.minute, dayStart.second)
+      result = self.messageGenerator.getNumberOfMessagesForSegment(segment, messagesPerDay, dayLength)
+      self.assertEqual(expectedMessagesForSegment, result)
+
    def verifyDaySegmentsForDates(self, startDateTime, surveyLengthInDays, expectedNumberOfDays):
       surveyLength = timedelta(surveyLengthInDays)
       endDateTime = startDateTime + surveyLength
@@ -140,3 +167,4 @@ class MessageGeneratorTestCase(unittest.TestCase):
       dayEnd = time(hour = 23, minute = 59, second = 59)
       result = self.messageGenerator.getDaySegmentsForDates(startDateTime, endDateTime, dayStart, dayEnd)
       self.assertEqual(expectedNumberOfDays, len(result), "result should contain exactly %d DaySegments, but instead contained %d [%s]"  % (expectedNumberOfDays, len(result), result))
+

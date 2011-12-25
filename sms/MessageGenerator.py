@@ -1,3 +1,4 @@
+import math
 from datetime import time, datetime, timedelta
 
 class DaySegment:
@@ -47,5 +48,9 @@ class MessageGenerator:
       if (endDateTime < segment.dayEnd):
          segment.setDayEnd(endDateTime)
 
-
-
+   def getNumberOfMessagesForSegment(self, segment, messagesPerDay, dayLength):
+      dayLengthInSeconds = dayLength.total_seconds()
+      messagesPerSecond = float(messagesPerDay) / float(dayLengthInSeconds)
+      result = int(messagesPerSecond * segment.dayLength.total_seconds())
+      return result
+      
