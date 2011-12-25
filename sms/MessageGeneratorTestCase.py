@@ -162,7 +162,7 @@ class MessageGeneratorTestCase(unittest.TestCase):
 
    def testGetMessageDateTimesForSegment(self):
       messagesPerDay = 7
-      guardTimeMinutes = 90
+      guardTimeMinutes = 15
       dayStart = time(hour = 9, minute = 0, second = 0)
       dayEnd = time(hour = 21, minute = 0, second = 0)
       startDateTime = datetime(2011, 12, 25, 9, 0, 0)
@@ -171,11 +171,9 @@ class MessageGeneratorTestCase(unittest.TestCase):
       segment = DaySegment(startDateTime, length, dayStart, dayEnd)
       segment.setDayStart(startDateTime)
       dayLength = datetime(2011, 12, 25, dayEnd.hour, dayEnd.minute, dayEnd.second) - datetime(2011, 12, 25, dayStart.hour, dayStart.minute, dayStart.second)
-      for i in xrange(1, 100000):
-         result = self.messageGenerator.getMessageDateTimesForSegment(segment, messagesPerDay, dayLength, guardTimeMinutes)
-      #   if len(result) < 7:
-      #      print len(result), result[-1]
-      
+      result = self.messageGenerator.getMessageDateTimesForSegment(segment, messagesPerDay, dayLength, guardTimeMinutes)
+      self.assertEqual(7, len(result), "should have exactly 7 times, but was %d" % len(result) )
+      self.assertTrue(result[-1].hour >= 19, "Last interval should be larger than 19.")
 
    def verifyDaySegmentsForDates(self, startDateTime, surveyLengthInDays, expectedNumberOfDays):
       surveyLength = timedelta(surveyLengthInDays)

@@ -54,20 +54,37 @@ class MessageGenerator:
       result = int(messagesPerSecond * segment.dayLength.total_seconds())
       return result
 
+   def getMessageAtRandomTimeInInterval(self, index, intervalLengthInSeconds):
+      return (index * intervalLengthInSeconds) + random.randint(0, intervalLengthInSeconds)
+      
    def getMessageDateTimesForSegment(self, segment, messagesPerDay, dayLength, guardTimeMinutes):
+      """
+      Returns a list of DateTime objects that correspond to random message times for
+      that DaySegment.
+      
+      For more info on the algorithm, see:
+   
+      Validity and Reliability of the Experience-Sampling Method
+      Mihaly Csikszentmihalyi, Reed Larson	 (1987)
+      The Journal of Nervous and Mental Disease	 175 (9)	 p. 528
+
+      """
       messagesForSegment = self.getNumberOfMessagesForSegment(segment, messagesPerDay, dayLength)
-      guardTimeSeconds = guardTimeMinutes * 60
-      index = 0
+      intervalLengthInSeconds = int(segment.dayLength.total_seconds() / messagesForSegment)
+      guardTimeInSeconds = guardTimeMinutes * 60
+      interval = 0
       messageDateTimes = []
-      messageSeconds = random.randint(0, guardTimeSeconds/2)
+      messageSeconds = self.getMessageAtRandomTimeInInterval(interval, intervalLengthInSeconds)
       messageDateTime = segment.dayStart + timedelta(seconds = messageSeconds)
       messageDateTimes.append(messageDateTime)
-      while (index < messagesPerDay - 1):
-         newMessageSeconds = messageSeconds + guardTimeSeconds + random.randint(0, guardTimeSeconds/2)
+      while (interval < messagesPerDay):
+         interval += 1
+         newMessageSeconds = self.getMessageAtRandomTimeInInterval(interval, intervalLengthInSeconds)
+         if ((newMessageSeconds - messageSeconds) < guardTimeInSeconds):
+            newMessageSeconds += (guardTimeInSeconds - (newMessageSeconds - messageSeconds))
          messageDateTime = segment.dayStart + timedelta(seconds = newMessageSeconds)
          if (messageDateTime <= segment.dayEnd):
             messageDateTimes.append(messageDateTime)
          messageSeconds = newMessageSeconds
-         index += 1
       return messageDateTimes
          
