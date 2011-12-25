@@ -1,4 +1,4 @@
-import math
+import math, random
 from datetime import time, datetime, timedelta
 
 class DaySegment:
@@ -53,4 +53,21 @@ class MessageGenerator:
       messagesPerSecond = float(messagesPerDay) / float(dayLengthInSeconds)
       result = int(messagesPerSecond * segment.dayLength.total_seconds())
       return result
-      
+
+   def getMessageDateTimesForSegment(self, segment, messagesPerDay, dayLength, guardTimeMinutes):
+      messagesForSegment = self.getNumberOfMessagesForSegment(segment, messagesPerDay, dayLength)
+      guardTimeSeconds = guardTimeMinutes * 60
+      index = 0
+      messageDateTimes = []
+      messageSeconds = random.randint(0, guardTimeSeconds/2)
+      messageDateTime = segment.dayStart + timedelta(seconds = messageSeconds)
+      messageDateTimes.append(messageDateTime)
+      while (index < messagesPerDay - 1):
+         newMessageSeconds = messageSeconds + guardTimeSeconds + random.randint(0, guardTimeSeconds/2)
+         messageDateTime = segment.dayStart + timedelta(seconds = newMessageSeconds)
+         if (messageDateTime <= segment.dayEnd):
+            messageDateTimes.append(messageDateTime)
+         messageSeconds = newMessageSeconds
+         index += 1
+      return messageDateTimes
+         
