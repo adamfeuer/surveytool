@@ -9,19 +9,6 @@ class MessageGeneratorTestCase(unittest.TestCase):
    def setUp(self):
       self.messageGenerator = MessageGenerator()
 
-   def testGetDaysBetweenDatesStartMidnight(self):
-      startDateTime = datetime(2011, 12, 23, 0, 0, 0)
-      self.verifyDaysBetweenDates(startDateTime, surveyLengthInDays=1, expectedNumberOfDays=1)
-      self.verifyDaysBetweenDates(startDateTime, surveyLengthInDays=2, expectedNumberOfDays=2)
-      self.verifyDaysBetweenDates(startDateTime, surveyLengthInDays=3, expectedNumberOfDays=3)
-
-   def testGetDaysBetweenDatesStartNotMidnight(self):
-      startDateTime = datetime(2011, 12, 23, 9, 30, 0)
-      self.verifyDaysBetweenDates(startDateTime, surveyLengthInDays=1, expectedNumberOfDays=2)
-      self.verifyDaysBetweenDates(startDateTime, surveyLengthInDays=2, expectedNumberOfDays=3)
-      self.verifyDaysBetweenDates(startDateTime, surveyLengthInDays=3, expectedNumberOfDays=4)
-      self.verifyDaysBetweenDates(startDateTime, surveyLengthInDays=7, expectedNumberOfDays=8)
-
    def testGetDaySegmentsForDatesMidnight(self):
       startDateTime = datetime(2011, 12, 23, 0, 0, 0)
       self.verifyDaySegmentsForDates(startDateTime, surveyLengthInDays=1,
@@ -146,12 +133,6 @@ class MessageGeneratorTestCase(unittest.TestCase):
       self.verifyDaySegmentsForDates(startDateTime, surveyLengthInDays=3,
                                      expectedNumberOfDays=4)
 
-   def verifyDaysBetweenDates(self, startDateTime, surveyLengthInDays, expectedNumberOfDays):
-      surveyLength = timedelta(surveyLengthInDays)
-      endDateTime = startDateTime + surveyLength
-      result = self.messageGenerator.getDaysBetweenDates(startDateTime, endDateTime)
-      self.assertEqual(expectedNumberOfDays, result, "result should be exactly %d days, but was %d"  % (expectedNumberOfDays, result))
-      
    def verifyDaySegmentsForDates(self, startDateTime, surveyLengthInDays, expectedNumberOfDays):
       surveyLength = timedelta(surveyLengthInDays)
       endDateTime = startDateTime + surveyLength

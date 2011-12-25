@@ -47,11 +47,5 @@ class MessageGenerator:
       if (endDateTime < segment.dayEnd):
          segment.setDayEnd(endDateTime)
 
-   def getDaysBetweenDates(self, startDateTime, endDateTime):
-      thisDay = datetime(startDateTime.year, startDateTime.month, startDateTime.day)
-      oneDay = timedelta(days = 1)
-      days = 0
-      while (thisDay < endDateTime):
-         thisDay += oneDay
-         days += 1
-      return days
+
+
