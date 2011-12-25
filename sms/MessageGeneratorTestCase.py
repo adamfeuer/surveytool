@@ -43,6 +43,18 @@ class MessageGeneratorTestCase(unittest.TestCase):
       expectedDay1Length = timedelta(days = 0, minutes = 12 * 60)
       self.verifySegment(result[0], expectedDay1Start, expectedDay1End, expectedDay1Length, startDateTime, endDateTime, dayStart, dayEnd)
 
+   def testGetDaySegmentsContentsForDatesOneDayStartAfterDayStart(self):
+      dayStart = time(hour = 9, minute = 0, second = 0)
+      dayEnd = time(hour = 21, minute = 0, second = 0)
+      startDateTime = datetime(2011, 12, 25, 10, 1, 0)
+      endDateTime = datetime(2011, 12, 25, 23, 59, 59)
+      expectedNumberOfDays = 1
+      result = self.getSegmentsAndVerifyCorrectNumberOfDays(expectedNumberOfDays, startDateTime, endDateTime, dayStart, dayEnd) 
+      expectedDay1Start = datetime(startDateTime.year, startDateTime.month, startDateTime.day, startDateTime.hour, startDateTime.minute)
+      expectedDay1End = datetime(startDateTime.year, startDateTime.month, startDateTime.day, dayEnd.hour, dayEnd.minute)
+      expectedDay1Length = timedelta(days = 0, minutes = ((10 * 60) + 59))
+      self.verifySegment(result[0], expectedDay1Start, expectedDay1End, expectedDay1Length, startDateTime, endDateTime, dayStart, dayEnd)
+
    def testGetDaySegmentsContentsForDatesTwoDays(self):
       dayStart = time(hour = 9, minute = 0, second = 0)
       dayEnd = time(hour = 21, minute = 0, second = 0)
@@ -57,6 +69,22 @@ class MessageGeneratorTestCase(unittest.TestCase):
       expectedDay2Start = datetime(startDateTime.year, startDateTime.month, startDateTime.day + 1, dayStart.hour, dayStart.minute)
       expectedDay2End = datetime(startDateTime.year, startDateTime.month, startDateTime.day + 1, dayEnd.hour, dayEnd.minute)
       expectedDay2Length = timedelta(days = 0, minutes = 12 * 60)
+      self.verifySegment(result[1], expectedDay2Start, expectedDay2End, expectedDay2Length, startDateTime, endDateTime, dayStart, dayEnd)
+
+   def testGetDaySegmentsContentsForDatesTwoDaysEndBeforeDayEnd(self):
+      dayStart = time(hour = 9, minute = 0, second = 0)
+      dayEnd = time(hour = 21, minute = 0, second = 0)
+      startDateTime = datetime(2011, 12, 25, 0, 0, 0)
+      endDateTime = datetime(2011, 12, 26, 20, 30, 00)
+      expectedNumberOfDays = 2
+      result = self.getSegmentsAndVerifyCorrectNumberOfDays(expectedNumberOfDays, startDateTime, endDateTime, dayStart, dayEnd)
+      expectedDay1Start = datetime(startDateTime.year, startDateTime.month, startDateTime.day, dayStart.hour, dayStart.minute)
+      expectedDay1End = datetime(startDateTime.year, startDateTime.month, startDateTime.day, dayEnd.hour, dayEnd.minute)
+      expectedDay1Length = timedelta(days = 0, minutes = 12 * 60)
+      self.verifySegment(result[0], expectedDay1Start, expectedDay1End, expectedDay1Length, startDateTime, endDateTime, dayStart, dayEnd)
+      expectedDay2Start = datetime(startDateTime.year, startDateTime.month, startDateTime.day + 1, dayStart.hour, dayStart.minute)
+      expectedDay2End = datetime(startDateTime.year, startDateTime.month, startDateTime.day + 1, endDateTime.hour, endDateTime.minute)
+      expectedDay2Length = timedelta(days = 0, minutes = ((11 * 60) + 30))
       self.verifySegment(result[1], expectedDay2Start, expectedDay2End, expectedDay2Length, startDateTime, endDateTime, dayStart, dayEnd)
 
    def testGetDaySegmentsContentsForDatesThreeDays(self):
@@ -77,6 +105,26 @@ class MessageGeneratorTestCase(unittest.TestCase):
       expectedDay3Start = datetime(endDateTime.year, endDateTime.month, endDateTime.day, dayStart.hour, dayStart.minute)
       expectedDay3End = datetime(endDateTime.year, endDateTime.month, endDateTime.day, dayEnd.hour, dayEnd.minute)
       expectedDay3Length = timedelta(days = 0, minutes = 12 * 60)
+      self.verifySegment(result[2], expectedDay3Start, expectedDay3End, expectedDay3Length, startDateTime, endDateTime, dayStart, dayEnd)
+
+   def testGetDaySegmentsContentsForDatesThreeDaysStartAndEndInsideWorkDay(self):
+      dayStart = time(hour = 9, minute = 0, second = 0)
+      dayEnd = time(hour = 21, minute = 0, second = 0)
+      startDateTime = datetime(2011, 12, 25, 10, 30, 0)
+      endDateTime = datetime(2011, 12, 27, 19, 30, 0)
+      expectedNumberOfDays = 3
+      result = self.getSegmentsAndVerifyCorrectNumberOfDays(expectedNumberOfDays, startDateTime, endDateTime, dayStart, dayEnd) 
+      expectedDay1Start = datetime(startDateTime.year, startDateTime.month, startDateTime.day, startDateTime.hour, startDateTime.minute)
+      expectedDay1End = datetime(startDateTime.year, startDateTime.month, startDateTime.day, dayEnd.hour, dayEnd.minute)
+      expectedDay1Length = timedelta(days = 0, minutes = 10 * 60 + 30)
+      self.verifySegment(result[0], expectedDay1Start, expectedDay1End, expectedDay1Length, startDateTime, endDateTime, dayStart, dayEnd)
+      expectedDay2Start = datetime(startDateTime.year, startDateTime.month, startDateTime.day + 1, dayStart.hour, dayStart.minute)
+      expectedDay2End = datetime(startDateTime.year, startDateTime.month, startDateTime.day + 1, dayEnd.hour, dayEnd.minute)
+      expectedDay2Length = timedelta(days = 0, minutes = 12 * 60)
+      self.verifySegment(result[1], expectedDay2Start, expectedDay2End, expectedDay2Length, startDateTime, endDateTime, dayStart, dayEnd)
+      expectedDay3Start = datetime(endDateTime.year, endDateTime.month, endDateTime.day, dayStart.hour, dayStart.minute)
+      expectedDay3End = datetime(endDateTime.year, endDateTime.month, endDateTime.day, endDateTime.hour, endDateTime.minute)
+      expectedDay3Length = timedelta(days = 0, minutes = 10 * 60 + 30)
       self.verifySegment(result[2], expectedDay3Start, expectedDay3End, expectedDay3Length, startDateTime, endDateTime, dayStart, dayEnd)
 
    def getSegmentsAndVerifyCorrectNumberOfDays(self, expectedNumberOfDays, startDateTime, endDateTime, dayStart, dayEnd):

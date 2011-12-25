@@ -13,11 +13,11 @@ class DaySegment:
       self.dayLength = self.dayEnd - self.dayStart
 
    def setDayStart(self, dayStart):
-      self.dayStart = datetime(self.start.year, self.start.month, self.start.day, dayStart.hour, dayStart.minute)
+      self.dayStart = dayStart
       self.updateDayLength()
 
    def setDayEnd(self, dayEnd):
-      self.dayEnd = datetime(self.start.year, self.start.month, self.start.day, dayEnd.hour, dayEnd.minute)
+      self.dayEnd = dayEnd
       self.updateDayLength()
 
 
@@ -33,8 +33,19 @@ class MessageGenerator:
          newSegment = DaySegment(thisDay, oneDay, dayStart, dayEnd)
          thisDay += oneDay
          segments.append(newSegment)
+      self.fixFirstDay(segments, startDateTime)
+      self.fixLastDay(segments, endDateTime)
       return segments
 
+   def fixFirstDay(self, segments, startDateTime):
+      segment = segments[0]
+      if (segment.dayStart < startDateTime):
+         segment.setDayStart(startDateTime)
+
+   def fixLastDay(self, segments, endDateTime):
+      segment = segments[-1]
+      if (endDateTime < segment.dayEnd):
+         segment.setDayEnd(endDateTime)
 
    def getDaysBetweenDates(self, startDateTime, endDateTime):
       thisDay = datetime(startDateTime.year, startDateTime.month, startDateTime.day)
