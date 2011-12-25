@@ -44,7 +44,8 @@ class MessageGeneratorTestCase(unittest.TestCase):
       self.assertEqual(expectedDayStart, segment.dayStart, "dayStarts should be identical: %s - %s" % (dayStart, segment.dayStart))
       expectedDayEnd = datetime(startDateTime.year, startDateTime.month, startDateTime.day, dayEnd.hour, dayEnd.minute)
       self.assertEqual(expectedDayEnd, segment.dayEnd, "dayEnds should be identical: %s - %s" % (dayStart, segment.dayStart))
-
+      expectedDayLength = timedelta(days = 0, minutes = 12 * 60)
+      self.assertEqual(expectedDayLength, segment.dayLength)
 
    def testGetDaySegmentsContentsForDatesTwoDays(self):
       dayStart = time(hour = 9, minute = 0, second = 0)
@@ -57,13 +58,47 @@ class MessageGeneratorTestCase(unittest.TestCase):
       firstSegment = result[0]
       expectedDayStart = datetime(startDateTime.year, startDateTime.month, startDateTime.day, dayStart.hour, dayStart.minute)
       self.assertEqual(expectedDayStart, firstSegment.dayStart, "dayStart should be identical: %s - %s" % (expectedDayStart, firstSegment.dayStart))
-      expectedDayEnd = datetime(startDateTime.year, startDateTime.month, startDateTime.day, 23, 59)
-      self.assertEqual(expectedDayEnd, firstSegment.dayEnd, "dayEnds should be identical: %s - %s" % (expectedDayEnd, firstSegment.dayEnd))
+      expectedDayEnd = datetime(startDateTime.year, startDateTime.month, startDateTime.day, dayEnd.hour, dayEnd.minute)
+      self.assertEqual(expectedDayEnd, firstSegment.dayEnd, "dayEnds should be identical: %s - %s" % (expectedDayEnd, firstSegment.dayEnd)) 
+      expectedFirstDayLength = timedelta(days = 0, minutes = 12 * 60)
+      self.assertEqual(expectedFirstDayLength, firstSegment.dayLength)
       lastSegment = result[1]
-      expectedDayStart = datetime(endDateTime.year, endDateTime.month, endDateTime.day, 0, 0)
+      expectedDayStart = datetime(endDateTime.year, endDateTime.month, endDateTime.day, dayStart.hour, dayStart.minute)
       self.assertEqual(expectedDayStart, lastSegment.dayStart, "dayStart should be identical: %s - %s" % (expectedDayStart, lastSegment.dayStart))
       expectedDayEnd = datetime(endDateTime.year, endDateTime.month, endDateTime.day, dayEnd.hour, dayEnd.minute)
       self.assertEqual(expectedDayEnd, lastSegment.dayEnd, "dayEnds should be identical: %s - %s" % (expectedDayEnd, lastSegment.dayEnd))
+      expectedLastDayLength = timedelta(days = 0, minutes = 12 * 60)
+      self.assertEqual(expectedLastDayLength, lastSegment.dayLength)
+
+   def testGetDaySegmentsContentsForDatesThreeDays(self):
+      dayStart = time(hour = 9, minute = 0, second = 0)
+      dayEnd = time(hour = 21, minute = 0, second = 0)
+      startDateTime = datetime(2011, 12, 25, 0, 0, 0)
+      endDateTime = datetime(2011, 12, 27, 23, 59, 59)
+      expectedNumberOfDays = 3
+      result = self.messageGenerator.getDaySegmentsForDates(startDateTime, endDateTime, dayStart, dayEnd)
+      self.assertEqual(expectedNumberOfDays, len(result), "result should contain exactly %d DaySegments, but instead contained %d [%s]"  % (expectedNumberOfDays, len(result), result))
+      firstSegment = result[0]
+      expectedFirstDayStart = datetime(startDateTime.year, startDateTime.month, startDateTime.day, dayStart.hour, dayStart.minute)
+      self.assertEqual(expectedFirstDayStart, firstSegment.dayStart, "dayStart should be identical: %s - %s" % (expectedFirstDayStart, firstSegment.dayStart))
+      expectedDayEnd = datetime(startDateTime.year, startDateTime.month, startDateTime.day, dayEnd.hour, dayEnd.minute)
+      self.assertEqual(expectedDayEnd, firstSegment.dayEnd, "dayEnds should be identical: %s - %s" % (expectedDayEnd, firstSegment.dayEnd)) 
+      expectedFirstDayLength = timedelta(days = 0, minutes = 12 * 60)
+      self.assertEqual(expectedFirstDayLength, firstSegment.dayLength)
+      segment2 = result[1]
+      expectedDay2Start = datetime(startDateTime.year, startDateTime.month, startDateTime.day + 1, dayStart.hour, dayStart.minute)
+      self.assertEqual(expectedDay2Start, segment2.dayStart, "dayStart should be identical: %s - %s" % (expectedDay2Start, segment2.dayStart))
+      expectedDay2End = datetime(startDateTime.year, startDateTime.month, startDateTime.day + 1, dayEnd.hour, dayEnd.minute)
+      self.assertEqual(expectedDay2End, segment2.dayEnd, "dayEnds should be identical: %s - %s" % (expectedDay2End, segment2.dayEnd)) 
+      expectedFirstDayLength = timedelta(days = 0, minutes = 12 * 60)
+      self.assertEqual(expectedFirstDayLength, segment2.dayLength)
+      lastSegment = result[2]
+      expectedDayStart = datetime(endDateTime.year, endDateTime.month, endDateTime.day, dayStart.hour, dayStart.minute)
+      self.assertEqual(expectedDayStart, lastSegment.dayStart, "dayStart should be identical: %s - %s" % (expectedDayStart, lastSegment.dayStart))
+      expectedDayEnd = datetime(endDateTime.year, endDateTime.month, endDateTime.day, dayEnd.hour, dayEnd.minute)
+      self.assertEqual(expectedDayEnd, lastSegment.dayEnd, "dayEnds should be identical: %s - %s" % (expectedDayEnd, lastSegment.dayEnd))
+      expectedLastDayLength = timedelta(days = 0, minutes = 12 * 60)
+      self.assertEqual(expectedLastDayLength, lastSegment.dayLength)
 
 
    def testGetDaySegmentsForDatesNotMidnight(self):
