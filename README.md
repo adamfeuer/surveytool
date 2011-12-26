@@ -30,8 +30,8 @@ Recommended
 * VirtualEnv
 * virutalenvwrapper
 
-Setup
-=====
+Installing
+==========
 
 See the file INSTALL.md
 
