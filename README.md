@@ -33,7 +33,7 @@ Recommended
 Setup
 =====
 
-(coming soon)
+See the file INSTALL.md
 
 Questions? Comments?
 
