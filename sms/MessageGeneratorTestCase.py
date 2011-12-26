@@ -181,6 +181,28 @@ class MessageGeneratorTestCase(unittest.TestCase):
             self.assertTrue((distance < guardTimeTimeDelta,
                              "distance is larger than guard time: %s < %s" % (distance, guardTimeTimeDelta)))
 
+
+   def xtestGetMessageDateTimesForSegmentPutInFile(self):
+      messagesPerDay = 7
+      guardTimeMinutes = 15
+      dayStart = time(hour = 9, minute = 0, second = 0)
+      dayEnd = time(hour = 21, minute = 0, second = 0)
+      startDateTime = datetime(2011, 12, 25, 9, 0, 0)
+      endDateTime = datetime(2011, 12, 25, 21, 0, 0)
+      length = endDateTime - startDateTime
+      segment = DaySegment(startDateTime, length, dayStart, dayEnd)
+      segment.setDayStart(startDateTime)
+      dayLength = datetime(2011, 12, 25, dayEnd.hour, dayEnd.minute, dayEnd.second) - datetime(2011, 12, 25, dayStart.hour, dayStart.minute, dayStart.second)
+      contents = ""
+      for iteration in xrange(1, 10000):
+         result = self.messageGenerator.getMessageDateTimesForSegment(segment, messagesPerDay, dayLength, guardTimeMinutes)
+         for item in result:
+            contents += "%s:%s\t" % (item.hour, item.minute)
+         contents += '\n'
+      f = open("message-time-series.txt", "w")
+      f.write(contents)
+      f.close()
+
    def verifyDaySegmentsForDates(self, startDateTime, surveyLengthInDays, expectedNumberOfDays):
       surveyLength = timedelta(surveyLengthInDays)
       endDateTime = startDateTime + surveyLength

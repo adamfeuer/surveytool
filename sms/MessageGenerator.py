@@ -83,7 +83,7 @@ class MessageGenerator:
          interval += 1
          newMessageSeconds = self.getMessageAtRandomTimeInInterval(interval, intervalLengthInSeconds)
          if ((newMessageSeconds - messageSeconds) < guardTimeInSeconds):
-            newMessageSeconds += (guardTimeInSeconds - (newMessageSeconds - messageSeconds))
+            newMessageSeconds += guardTimeInSeconds
          messageDateTime = self.getMessageDateTime(segment.dayStart, newMessageSeconds)
          if (messageDateTime <= segment.dayEnd):
             messageDateTimes.append(messageDateTime)
