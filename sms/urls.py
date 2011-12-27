@@ -14,5 +14,6 @@ urlpatterns = patterns('',
     (r'^delete_message/(?P<message_id>\d+)/$', 'sms.views.delete_message'),
     (r'^edit_message/(?P<message_id>\d+)/$', 'sms.views.edit_message'),
     url(r'^save_message$', 'sms.views.save_message', name="save_message"),
+    (r'^messages_for_project/(?P<project_id>\d+)/$', 'sms.views.messages_for_project'),
     (r'^generate_messages/(?P<project_id>\d+)/$', 'sms.views.generate_messages'),
 )

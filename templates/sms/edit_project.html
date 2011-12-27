@@ -18,10 +18,18 @@
        <p><input type="submit" value="Save Project" /></p>
      </form>
 
+     <form action="/sms/messages_for_project/{{form.id.value}}/" method="post">
+       {% csrf_token %}
+      <p><input type="submit" value="View Messages For Project" /></p>
+     </form>
+
      <form action="/sms/generate_messages/{{form.id.value}}/" method="post">
        {% csrf_token %}
       <p><input type="submit" value="Generate Messages For Project" /></p>
      </form>
+
+     <p>&nbsp;</p>
+     <p>&nbsp;</p>
 
      <form action="/sms/delete_project/{{form.id.value}}/" method="post">
        {% csrf_token %}
