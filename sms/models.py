@@ -65,5 +65,5 @@ class UserDetail(models.Model):
    modified = ModificationDateTimeField()
    
    def __unicode__(self):
-      return "'%s': '%s'" % (self.user, self.project)
+      return "'%s': '%s'" % (self.user, self.phone_number)
 

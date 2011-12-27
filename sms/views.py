@@ -208,8 +208,9 @@ def save_message(request):
 def generate_messages(request, project_id):
    messageGenerator = MessageGenerator()
    project = Project.objects.get(pk = project_id)
-   #Message.objects.filter(project = project_id).delete()
+   Message.objects.filter(project = project_id).delete()
    memberships = Membership.objects.filter(project = project_id)
+   print "memberships: %s" % memberships
    for membership in memberships:
       messageGenerator.generateMessages(membership.user, membership.project)
    sms_messages = Message.objects.all().filter(project = project_id).order_by('send_at')

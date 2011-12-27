@@ -1,7 +1,10 @@
 import math, random
 from datetime import time, datetime, timedelta
+from sms.models import Message, UserDetail
 
-DEFAULT_SALUTATION = "Hi,"
+
+DEFAULT_SALUTATION = ""
+TIME_FORMAT = "%Y-%m-%d %H:%M"
 
 class DaySegment:
    def __init__(self, startDateTime, segmentLength, dayStart, dayEnd):
@@ -102,12 +105,23 @@ class MessageGenerator:
       messageDateTimes = []
       segments = self.getDaySegmentsForDates(start, end, dayStart, dayEnd)
       for segment in segments:
-         messageDateTimes.append(self.getMessageDateTimesForSegment(segment, messagesPerDay, dayLength, guardTimeMinutes))
+         messageDateTimes += self.getMessageDateTimesForSegment(segment, messagesPerDay, dayLength, guardTimeMinutes)
       return messageDateTimes
 
    def generateMessage(self, user, project, messageDateTime):
-      message = "%s %s, %s %s" % (DEFAULT_SALUTATION, user.first_name, project.smartphone_message, project.survey_url)
-      print message
+      # todo - defaults if fields are not filled out, message validation
+      userDetailList = UserDetail.objects.filter(user__id = user.id)
+      userDetail = userDetailList[0]
+      if (userDetail.no_messages is True):
+         return
+      messageText = "%s %s, %s %s" % (DEFAULT_SALUTATION, user.first_name, project.smartphone_message, project.survey_url)
+      message = Message()
+      message.project = project
+      message.user_id = "%s" % user.id
+      message.phone_number = "%s" % userDetail.phone_number
+      message.message = messageText
+      message.send_at = messageDateTime.strftime(TIME_FORMAT)
+      message.save()
 
    def generateMessages(self, user, project):
       messageDateTimes = self.getMessageDateTimesForProject(project.start_datetime, project.end_datetime,
