@@ -12,12 +12,13 @@ from django.contrib import messages
 from forms import SmsForm, ProjectForm, SurveysForm, MessageForm
 from models import Project, Membership, Message, UserDetails
 from smsutil import SmsSender
+from MessageGenerator import MessageGenerator
 
 DATETIME_FORMAT="%m/%d/%Y %H:%M"
 TIME_FORMAT="%H:%M"
 
 DEFAULT_MESSAGES_PER_DAY = 7
-DEFAULT_GUARD_TIME_MINUTES = 90
+DEFAULT_GUARD_TIME_MINUTES = 15
 DEFAULT_DAY_START_TIME = "09:00"
 DEFAULT_DAY_END_TIME = "21:00"
 
@@ -114,7 +115,6 @@ def delete_project(request, project_id):
 
 
 @login_required
-@user_passes_test(lambda u: u.is_staff)
 def surveys_select(request, username):
    user = get_object_or_404(User, username__iexact=username)
    if request.method == 'POST': 
@@ -201,6 +201,22 @@ def save_message(request):
    return render_to_response('sms/edit_message.html',
                              {'form': form },
                              context_instance=RequestContext(request))
+
+
+@login_required
+@user_passes_test(lambda u: u.is_staff)
+def generate_messages(request, project_id):
+   messageGenerator = MessageGenerator()
+   project = Project.objects.get(pk = project_id)
+   #Message.objects.filter(project = project_id).delete()
+   memberships = Membership.objects.filter(project = project_id)
+   for membership in memberships:
+      messageGenerator.generateMessages(membership.user, membership.project)
+   sms_messages = Message.objects.all().filter(project = project_id).order_by('send_at')
+   return render_to_response('sms/messages.html',
+                             { 'sms_messages' : sms_messages },
+                             context_instance=RequestContext(request))
+
 
 def get_surveys(user):
    memberships = Membership.objects.filter(user = user.id)

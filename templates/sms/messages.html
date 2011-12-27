@@ -15,6 +15,7 @@
     <table class="message-table"> 
        <tr>
          <th>Id</th> 
+         <th>Project</th>
          <th>User Id</th>
          <th>Phone Number</th>
          <th>Email</th>
@@ -29,6 +30,7 @@
       {% for message in sms_messages %}
        <tr>
          <td>{{ message.id }}</td> 
+         <td>{{ message.project }}</td>
          <td>{{ message.user_id }}</td>
          <td>{{ message.phone_number }}</td>
          <td>{{ message.email }}</td>

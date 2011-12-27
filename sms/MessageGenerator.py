@@ -1,6 +1,8 @@
 import math, random
 from datetime import time, datetime, timedelta
 
+DEFAULT_SALUTATION = "Hi, "
+
 class DaySegment:
    def __init__(self, startDateTime, segmentLength, dayStart, dayEnd):
       self.segmentLength = segmentLength
@@ -20,7 +22,6 @@ class DaySegment:
    def setDayEnd(self, dayEnd):
       self.dayEnd = dayEnd
       self.updateDayLength()
-
 
 class MessageGenerator:
    def __init__(self):
@@ -89,4 +90,28 @@ class MessageGenerator:
             messageDateTimes.append(messageDateTime)
          messageSeconds = newMessageSeconds
       return messageDateTimes
-         
+
+   def getDayLength(self, dayStart, dayEnd):
+      now = datetime.now()
+      start = datetime(now.year, now.month, now.day, hour=dayStart.hour, minute=dayStart.minute, second=dayStart.second)
+      end = datetime(now.year, now.month, now.day, hour=dayEnd.hour, minute=dayEnd.minute, second=dayEnd.second)
+      return end - start
+
+   def getMessageDateTimesForProject(self, start, end, dayStart, dayEnd, messagesPerDay, guardTimeMinutes):
+      dayLength = self.getDayLength(dayStart, dayEnd)
+      messageDateTimes = []
+      segments = self.getDaySegmentsForDates(start, end, dayStart, dayEnd)
+      for segment in segments:
+         messageDateTimes.append(self.getMessageDateTimesForSegment(segment, messagesPerDay, dayLength, guardTimeMinutes))
+      return messageDateTimes
+
+   def generateMessage(self, user, project, messageDateTime):
+      message = "%s %s, %s %s" % (DEFAULT_SALUTATION, user.first_name, project.smartphone_message, project.survey_url)
+      print message
+
+   def generateMessages(self, user, project):
+      messageDateTimes = self.getMessageDateTimesForProject(project.start_datetime, project.end_datetime,
+                                                            project.day_start_time, project.day_end_time,
+                                                            project.messages_per_day, project.guard_time_minutes)
+      for messageDateTime in messageDateTimes:
+         self.generateMessage(user, project, messageDateTime)

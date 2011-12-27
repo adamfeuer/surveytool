@@ -1,4 +1,4 @@
-from sms.models import Setting, Project
+from sms.models import Setting, Project, Membership, Message, UserDetails
 from django.contrib import admin
 
 class SettingAdmin(admin.ModelAdmin):
@@ -6,9 +6,26 @@ class SettingAdmin(admin.ModelAdmin):
 
 
 class ProjectAdmin(admin.ModelAdmin):
-    fields = [ 'name', 'survey_url', 'smartphone_message', 'text_message' ]
+    fields = ['name', 'survey_url', 'smartphone_message', 'text_message',
+              'start_datetime', 'end_datetime', 'messages_per_day',
+              'guard_time_minutes', 'synchronize_messages', 'day_start_time',
+              'day_end_time']
+
+class MembershipAdmin(admin.ModelAdmin):
+   fields = ['user', 'project']
+
+class MessageAdmin(admin.ModelAdmin):
+   fields = ['project', 'user_id', 'phone_number', 'email', 'message', 'send_at',
+             'sent', 'sent_status', 'sent_error_message']
+
+class UserDetailsAdmin(admin.ModelAdmin):
+   fields = ['user', 'phone_number', 'smartphone', 'no_messages']
 
 admin.site.register(Setting, SettingAdmin)
 admin.site.register(Project, ProjectAdmin)
+admin.site.register(Membership, MembershipAdmin)
+admin.site.register(Message, MessageAdmin)
+admin.site.register(UserDetails, UserDetailsAdmin)
+
 
 

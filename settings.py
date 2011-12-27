@@ -107,6 +107,7 @@ INSTALLED_APPS = (
 )
 
 # Userena settings
+USERENA_ACTIVATION_REQUIRED = False
 LOGIN_REDIRECT_URL = '/accounts/%(username)s/'
 LOGIN_URL = '/accounts/signin/'
 LOGOUT_URL = '/accounts/signout/'
