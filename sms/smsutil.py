@@ -1,7 +1,7 @@
 import os, time
 from twilio import TwilioRestException
 from twilio.rest import TwilioRestClient
-from sms.models import Setting
+from django.conf import settings
 
 class SmsStatus:
    OK = True
@@ -18,6 +18,10 @@ class SmsSender:
       self.client = TwilioRestClient(account, token)
 
    def send(self, phoneNumber, message):
+      if phoneNumber not in settings.ALLOWED_PHONE_NUMBERS: 
+         status = "INFO: not sending message because the phone number is not in ALLOWED_PHONE_NUMBERS."
+         print status
+         return SmsStatus(SmsStatus.ERROR, status)
       phoneNumberWithPlus = "+" + phoneNumber
       try:
          message = self.client.sms.messages.create(to=phoneNumberWithPlus,

@@ -30,7 +30,6 @@ def sms(request):
       form = SmsForm(request.POST)
       if form.is_valid():
          result = SmsSender().send(form.cleaned_data["phone_number"], form.cleaned_data['message'])
-         print result.status, result.message
          return HttpResponseRedirect('/') 
    else:
       form = SmsForm() 

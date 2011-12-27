@@ -108,13 +108,16 @@ class MessageGenerator:
          messageDateTimes += self.getMessageDateTimesForSegment(segment, messagesPerDay, dayLength, guardTimeMinutes)
       return messageDateTimes
 
+   def getMessageText(self, user, userDetail, project):
+      return "%s %s, %s %s?u=%s" % (DEFAULT_SALUTATION, user.first_name, project.smartphone_message, project.survey_url, user.id)      
    def generateMessage(self, user, project, messageDateTime):
       # todo - defaults if fields are not filled out, message validation
       userDetailList = UserDetail.objects.filter(user__id = user.id)
       userDetail = userDetailList[0]
       if (userDetail.no_messages is True):
+         print "INFO: not sending message to user %s because no_messages is True." % user.id
          return
-      messageText = "%s %s, %s %s?u=%s" % (DEFAULT_SALUTATION, user.first_name, project.smartphone_message, project.survey_url, user.id)
+      messageText = self.getMessageText(user, userDetail, project)
       message = Message()
       message.project = project
       message.user_id = "%s" % user.id
