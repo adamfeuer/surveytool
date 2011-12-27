@@ -114,7 +114,7 @@ class MessageGenerator:
       userDetail = userDetailList[0]
       if (userDetail.no_messages is True):
          return
-      messageText = "%s %s, %s %s" % (DEFAULT_SALUTATION, user.first_name, project.smartphone_message, project.survey_url)
+      messageText = "%s %s, %s %s?u=%s" % (DEFAULT_SALUTATION, user.first_name, project.smartphone_message, project.survey_url, user.id)
       message = Message()
       message.project = project
       message.user_id = "%s" % user.id
