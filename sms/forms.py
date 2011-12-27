@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from sms.models import Project, Membership, UserDetails
+from sms.models import Project, Membership
 
 def get_datetime_field():
    return StrippingDateTimeField(required=False, widget=forms.TextInput(attrs={'class':'jquery-datetime'}))

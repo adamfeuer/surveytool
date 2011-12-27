@@ -1,7 +1,7 @@
 import math, random
 from datetime import time, datetime, timedelta
 
-DEFAULT_SALUTATION = "Hi, "
+DEFAULT_SALUTATION = "Hi,"
 
 class DaySegment:
    def __init__(self, startDateTime, segmentLength, dayStart, dayEnd):

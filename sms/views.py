@@ -10,7 +10,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 
 from forms import SmsForm, ProjectForm, SurveysForm, MessageForm
-from models import Project, Membership, Message, UserDetails
+from models import Project, Membership, Message, UserDetail
 from smsutil import SmsSender
 from MessageGenerator import MessageGenerator
 
@@ -223,9 +223,9 @@ def get_surveys(user):
    return [membership.project for membership in memberships]
 
 def get_user_details(user):
-   user_details_list = UserDetails.objects.filter(user = user.id)
+   user_details_list = UserDetail.objects.filter(user = user.id)
    if len(user_details_list) == 0:
-      user_details = UserDetails()
+      user_details = UserDetail()
       user_details.user = user
       user_details.smartphone = True
       user_details.no_messages = False
@@ -241,11 +241,11 @@ def save_memberships_from_form(user, form):
    for project in form.cleaned_data['surveys']:
       membership = Membership(user = user, project = project)
       membership.save()
-   user_details_list = UserDetails.objects.filter(user = user.id)
+   user_details_list = UserDetail.objects.filter(user = user.id)
    if (len(user_details_list) > 0):
       user_details = user_details_list[0]
    else:
-      user_details = UserDetails()
+      user_details = UserDetail()
    user_details.phone_number = form.cleaned_data['phone_number']
    user_details.smartphone = form.cleaned_data['smartphone']
    user_details.no_messages = form.cleaned_data['no_messages']

@@ -1,4 +1,4 @@
-from sms.models import Setting, Project, Membership, Message, UserDetails
+from sms.models import Setting, Project, Membership, Message, UserDetail
 from django.contrib import admin
 
 class SettingAdmin(admin.ModelAdmin):
@@ -18,14 +18,14 @@ class MessageAdmin(admin.ModelAdmin):
    fields = ['project', 'user_id', 'phone_number', 'email', 'message', 'send_at',
              'sent', 'sent_status', 'sent_error_message']
 
-class UserDetailsAdmin(admin.ModelAdmin):
+class UserDetailAdmin(admin.ModelAdmin):
    fields = ['user', 'phone_number', 'smartphone', 'no_messages']
 
 admin.site.register(Setting, SettingAdmin)
 admin.site.register(Project, ProjectAdmin)
 admin.site.register(Membership, MembershipAdmin)
 admin.site.register(Message, MessageAdmin)
-admin.site.register(UserDetails, UserDetailsAdmin)
+admin.site.register(UserDetail, UserDetailAdmin)
 
 
 

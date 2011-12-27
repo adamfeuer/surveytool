@@ -56,7 +56,7 @@ class Message(models.Model):
    def __unicode__(self):
       return "'%s': '%s %s'" % (self.project, self.phone_number, self.message)
    
-class UserDetails(models.Model):
+class UserDetail(models.Model):
    user = models.ForeignKey(User)
    phone_number = models.CharField(max_length=100)
    smartphone = models.BooleanField()
