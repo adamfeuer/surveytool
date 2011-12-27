@@ -2,6 +2,7 @@ import os, time
 from twilio import TwilioRestException
 from twilio.rest import TwilioRestClient
 from django.conf import settings
+from surveytool.common.util import flavor_is_not_prod
 
 class SmsStatus:
    OK = True
@@ -18,7 +19,7 @@ class SmsSender:
       self.client = TwilioRestClient(account, token)
 
    def send(self, phoneNumber, message):
-      if phoneNumber not in settings.ALLOWED_PHONE_NUMBERS: 
+      if (flavor_is_not_prod() and phoneNumber not in settings.ALLOWED_PHONE_NUMBERS): 
          status = "INFO: not sending message because the phone number is not in ALLOWED_PHONE_NUMBERS."
          print status
          return SmsStatus(SmsStatus.ERROR, status)

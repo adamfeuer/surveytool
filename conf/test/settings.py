@@ -1,6 +1,6 @@
 from  surveytool.settings import *
 
-FLAVOR = "test"
+FLAVOR = TEST
 DEBUG = True
 TEMPLATE_DEBUG = True
 

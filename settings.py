@@ -125,3 +125,8 @@ ANONYMOUS_USER_ID = -1
 
 # Survey Tool
 
+PROD = "prod"
+TEST = "test"
+DEV = "dev"
+
+

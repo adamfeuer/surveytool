@@ -1,8 +1,9 @@
 from  surveytool.settings import *
 
-FLAVOR = "dev"
+FLAVOR = DEV
 DEBUG = True
 TEMPLATE_DEBUG = True
 
 ALLOWED_PHONE_NUMBERS = ['12063304774']
+#ALLOWED_PHONE_NUMBERS = []
 
