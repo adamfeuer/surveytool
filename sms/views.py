@@ -228,6 +228,16 @@ def messages_for_project(request, project_id):
                              { 'sms_messages' : sms_messages },
                              context_instance=RequestContext(request))
 
+@login_required
+@user_passes_test(lambda u: u.is_staff)
+def delete_messages_for_project(request, project_id):
+   project = Project.objects.get(pk = project_id)
+   Message.objects.filter(project = project_id).delete()
+   sms_messages = Message.objects.all().filter(project = project_id).order_by('send_at')
+   return render_to_response('sms/messages.html',
+                             { 'sms_messages' : sms_messages },
+                             context_instance=RequestContext(request))
+
 def get_surveys(user):
    memberships = Membership.objects.filter(user = user.id)
    return [membership.project for membership in memberships]

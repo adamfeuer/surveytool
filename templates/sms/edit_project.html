@@ -28,6 +28,11 @@
       <p><input type="submit" value="Generate Messages For Project" /></p>
      </form>
 
+     <form action="/sms/delete_messages/{{form.id.value}}/" method="post">
+       {% csrf_token %}
+      <p><input type="submit" value="Delete All Messages For Project" /></p>
+     </form>
+
      <p>&nbsp;</p>
      <p>&nbsp;</p>
 
