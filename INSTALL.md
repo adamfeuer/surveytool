@@ -53,10 +53,11 @@ See http://www.doughellmann.com/docs/virtualenvwrapper/
 9. Clone the Survey Tool git repository - this is a read-only link
 
     git clone git://github.com/adamfeuer/surveytool.git
+    cd surveytool    
 
-10. Set up the database
+10. Generate keyczar keys:
 
-    python manage.py syncdb
+    bin/keyczart keys
 
 11. Create the Survey Tool config file
 
@@ -65,18 +66,18 @@ See http://www.doughellmann.com/docs/virtualenvwrapper/
     export TWILIO_ACCOUNT='your-twilio-account-string'
     export TWILIO_TOKEN='your-twilio-token'
 
-12. create Admin user by following prompts
+12. Set up the database
+
+    python manage.py syncdb
+
+13. create Admin user by following prompts
 
    cd $WORKON_HOME/surveytool/surveytool
-   ./runserver
+   bin/runserver
 
-13. Create a Profile object for the Admin user - necessary to log in
+14. Create a Profile object for the Admin user - necessary to log in
 
 Now visit http://localhost:8000/admin
-
-14. Generate keyczar keys:
-
-    bin/keyczart keys
 
 15. Log in!
 
