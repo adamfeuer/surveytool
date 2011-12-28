@@ -48,44 +48,38 @@ See http://www.doughellmann.com/docs/virtualenvwrapper/
 8. Install the required software in the Survey Tool virtualenv
 
     easy_install pip
-    pip install virtualenv
-    pip install virtualenvwrapper
-    pip install django django-userena django-cronjobs django-extensions south pil twilio 
+    pip install install -r requirements.pip
     pip install http://keyczar.googlecode.com/files/python-keyczar-0.7b.081911.tar.gz
  
-9. ipython isn't strictly necessary, but is a convenience
-
-    pip install ipython
-
-10. Clone the Survey Tool git repository - this is a read-only link
+9. Clone the Survey Tool git repository - this is a read-only link
 
     git clone git://github.com/adamfeuer/surveytool.git
 
-11. Set up the database
+10. Set up the database
 
     python manage.py syncdb
 
-12. Create the Survey Tool config file
+11. Create the Survey Tool config file
 
     vim $HOME/.surveytoolrc
     export TWILIO_FROM_PHONE_NUMBER='+1XXXYYYY'
     export TWILIO_ACCOUNT='your-twilio-account-string'
     export TWILIO_TOKEN='your-twilio-token'
 
-13. create Admin user by following prompts
+12. create Admin user by following prompts
 
    cd $WORKON_HOME/surveytool/surveytool
    ./runserver
 
-14. Create a Profile object for the Admin user - necessary to log in
+13. Create a Profile object for the Admin user - necessary to log in
 
 Now visit http://localhost:8000/admin
 
-15. Generate keyczar keys:
+14. Generate keyczar keys:
 
     bin/keyczart keys
 
-16. Log in!
+15. Log in!
 
 Visit http://localhost:8000
 
