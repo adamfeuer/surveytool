@@ -51,8 +51,8 @@ See http://www.doughellmann.com/docs/virtualenvwrapper/
     pip install virtualenv
     pip install virtualenvwrapper
     pip install django django-userena django-cronjobs django-extensions south pil twilio 
-    pip install http://keyczar.googlecode.com/files/python-keyczar-0.6b.061709.tar.gz
-
+    pip install http://code.google.com/p/keyczar/downloads/detail?name=python-keyczar-0.7b.081911.tar.gz&can=2&q=
+ 
 9. ipython isn't strictly necessary, but is a convenience
 
     pip install ipython
