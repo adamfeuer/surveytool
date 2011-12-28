@@ -11,7 +11,7 @@ see https://github.com/mxcl/homebrew/wiki/installation
 
 brew install python
 
-3, Then change system defaults to brew's cellar:
+3. Then change system defaults to brew's cellar:
 
 I found this article helpful: http://www.thisisthegreenroom.com/2011/installing-python-numpy-scipy-matplotlib-and-ipython-on-lion/
 
@@ -51,6 +51,7 @@ See http://www.doughellmann.com/docs/virtualenvwrapper/
     pip install virtualenv
     pip install virtualenvwrapper
     pip install django django-userena django-cronjobs django-extensions south pil twilio 
+    pip install http://keyczar.googlecode.com/files/python-keyczar-0.6b.061709.tar.gz
 
 9. ipython isn't strictly necessary, but is a convenience
 
@@ -80,7 +81,12 @@ See http://www.doughellmann.com/docs/virtualenvwrapper/
 
 Now visit http://localhost:8000/admin
 
-15. Log in!
+15. Generate keyczar keys:
+
+    bin/keyczart.py create --location=keys --purpose=crypt
+    bin/keyczart.py addkey --location=keys --purpose=primary
+
+16. Log in!
 
 Visit http://localhost:8000
 
