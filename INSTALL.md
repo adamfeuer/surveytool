@@ -49,7 +49,6 @@ See http://www.doughellmann.com/docs/virtualenvwrapper/
 
     easy_install pip
     pip install install -r requirements.pip
-    pip install http://keyczar.googlecode.com/files/python-keyczar-0.7b.081911.tar.gz
  
 9. Clone the Survey Tool git repository - this is a read-only link
 
