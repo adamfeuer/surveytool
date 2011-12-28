@@ -23,7 +23,7 @@ class SmsSender:
    def send(self, phoneNumber, message):
       if (flavor_is_not_prod() and phoneNumber not in settings.ALLOWED_PHONE_NUMBERS): 
          status = "Not sending message because the phone number is not in ALLOWED_PHONE_NUMBERS."
-         logger.info(status)
+         logger.warn(status)
          return SmsStatus(SmsStatus.ERROR, status)
       phoneNumberWithPlus = "+" + phoneNumber
       try:

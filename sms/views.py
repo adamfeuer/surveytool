@@ -11,7 +11,7 @@ from django.contrib import messages
 
 from forms import SmsForm, ProjectForm, SurveysForm, MessageForm
 from models import Project, Membership, Message, UserDetail
-from smsutil import SmsSender
+from SmsSender import SmsSender
 from MessageGenerator import MessageGenerator
 
 DATETIME_FORMAT="%m/%d/%Y %H:%M"

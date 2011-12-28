@@ -2,7 +2,7 @@ import sys, datetime
 import cronjobs
 
 from models import Message
-from smsutil import SmsSender
+from SmsSender import SmsSender
 
 @cronjobs.register
 def send_messages():
