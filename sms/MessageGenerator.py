@@ -1,7 +1,8 @@
-import math, random
+import math, random, logging
 from datetime import time, datetime, timedelta
 from sms.models import Message, UserDetail
 
+logger = logging.getLogger(__name__)
 
 DEFAULT_SALUTATION = ""
 TIME_FORMAT = "%Y-%m-%d %H:%M"
@@ -115,7 +116,7 @@ class MessageGenerator:
       userDetailList = UserDetail.objects.filter(user__id = user.id)
       userDetail = userDetailList[0]
       if (userDetail.no_messages is True):
-         print "INFO: not sending message to user %s because no_messages is True." % user.id
+         logger.warn("INFO: not sending message to user %s because no_messages is True." % user.id)
          return
       messageText = self.getMessageText(user, userDetail, project)
       message = Message()

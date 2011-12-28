@@ -1,4 +1,4 @@
-import datetime, time
+import datetime, logging, time
 
 from django.core.context_processors import csrf
 from django.shortcuts import render_to_response
@@ -13,6 +13,8 @@ from forms import SmsForm, ProjectForm, SurveysForm, MessageForm
 from models import Project, Membership, Message, UserDetail
 from SmsSender import SmsSender
 from MessageGenerator import MessageGenerator
+
+logger = logging.getLogger(__name__)
 
 DATETIME_FORMAT="%m/%d/%Y %H:%M"
 TIME_FORMAT="%H:%M"
@@ -162,7 +164,6 @@ def messages(request):
 @user_passes_test(lambda u: u.is_staff)
 def edit_message(request, message_id):
    m = get_object_or_404(Message, pk=message_id)
-   print m.id, m.phone_number, m.send_at
    form = MessageForm({ 'id' : m.id,
                         'project' : m.project,
                         'user_id' : m.user_id,
@@ -209,7 +210,6 @@ def generate_messages(request, project_id):
    project = Project.objects.get(pk = project_id)
    Message.objects.filter(project = project_id).delete()
    memberships = Membership.objects.filter(project = project_id)
-   print "memberships: %s" % memberships
    for membership in memberships:
       messageGenerator.generateMessages(membership.user, membership.project)
    sms_messages = Message.objects.all().filter(project = project_id).order_by('send_at')
