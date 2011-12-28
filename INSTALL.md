@@ -83,8 +83,7 @@ Now visit http://localhost:8000/admin
 
 15. Generate keyczar keys:
 
-    bin/keyczart.py create --location=keys --purpose=crypt
-    bin/keyczart.py addkey --location=keys --purpose=primary
+    bin/keyczart keys
 
 16. Log in!
 

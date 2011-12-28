@@ -10,7 +10,7 @@ easy-thumbnails==1.0-alpha-18
 httplib2==0.7.1
 pyasn1==0.1.2
 pycrypto==2.4.1
-python-keyczar==0.6b
+python-keyczar==0.7b
 twilio==3.3.2
 wsgiref==0.1.2
 yolk==0.4.1

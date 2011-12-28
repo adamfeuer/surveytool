@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django_extensions.db.fields import CreationDateTimeField, ModificationDateTimeField
+from django_extensions.db.fields.encrypted import EncryptedCharField
 
 class Setting(models.Model):
    name = models.CharField(max_length=200)
@@ -42,10 +43,10 @@ class Membership(models.Model):
 
 class Message(models.Model):
    project = models.ForeignKey(Project)
-   user_id = models.CharField(max_length=100)
-   phone_number = models.CharField(max_length=100)
-   email = models.EmailField()
-   message = models.CharField(max_length=160)
+   user_id = EncryptedCharField(max_length=100)
+   phone_number = EncryptedCharField(max_length=100)
+   email = EncryptedCharField(max_length=200)
+   message = EncryptedCharField(max_length=160)
    send_at = models.DateTimeField()
    sent = models.BooleanField()
    sent_status = models.BooleanField()

@@ -164,6 +164,9 @@ SOUTH_TESTS_MIGRATE = False
 # Guardian
 ANONYMOUS_USER_ID = -1
 
+# Key Czar and django-extensions
+ENCRYPTED_FIELD_KEYS_DIR = 'keys'
+
 # Survey Tool
 
 PROD = "prod"
