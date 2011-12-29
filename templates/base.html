@@ -61,8 +61,6 @@
         <ul id="nav">
           <li><a href="{% url home %}"><span>{% trans 'Home' %}</span></a></li>
           {% if user.is_authenticated %}
-          <li><a href="{% url userena_profile_list %}"><span>{% trans 'All profiles' %}</span></a></li>
-          <li><a href="{% url userena_umessages_list %}"><span>{% trans 'Messages' %}</span></a></li>
           <li><a href="{% url userena_profile_detail user.username %}"><span>{% trans 'Account' %} ({{ user.username }})</span></a></li>
           <li><a href="{% url userena_signout %}"><span>{% trans 'Signout' %}</span></a></li>
           {% else %}
