@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
+from django.contrib.localflavor.us.forms import USPhoneNumberField
 from sms.models import Project, Membership
 
 def get_datetime_field():
@@ -46,7 +47,7 @@ class ProjectForm(forms.Form):
 class SurveysForm(forms.Form):
    surveys = ProjectModelMultipleChoiceField(queryset=Project.objects.all(), required=False)
    user_id = forms.IntegerField(widget=forms.HiddenInput, required=False)
-   phone_number = forms.CharField(max_length=100, required=False, label='Phone number starting with area code')
+   phone_number = USPhoneNumberField(required=False, label='Phone number starting with area code')
    smartphone = forms.BooleanField(required=False,label='This phone is a smartphone')
    no_messages = forms.BooleanField(required=False, label='Do not send me any text messages or emails')
 

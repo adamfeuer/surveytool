@@ -1,4 +1,4 @@
-import os, time, logging
+import os, time, logging, string
 from twilio import TwilioRestException
 from twilio.rest import TwilioRestClient
 from django.conf import settings
@@ -20,12 +20,23 @@ class SmsSender:
       token = os.environ['TWILIO_TOKEN']
       self.client = TwilioRestClient(account, token)
 
+   def removeDashes(self, phoneNumber):
+        return phoneNumber.replace('-', '')
+
+   def format(self, phoneNumber):
+      if (phoneNumber[0] == "1"):
+          prefix = "+"
+      else:
+          prefix =  "+1"
+      phoneNumber = self.removeDashes(phoneNumber)
+      return prefix + phoneNumber
+
    def send(self, phoneNumber, message):
       if (flavor_is_not_prod() and phoneNumber not in settings.ALLOWED_PHONE_NUMBERS): 
          status = "Not sending message because the phone number is not in ALLOWED_PHONE_NUMBERS."
          logger.warn(status)
          return SmsStatus(SmsStatus.ERROR, status)
-      phoneNumberWithPlus = "+" + phoneNumber
+      phoneNumberWithPlus = self.format(phoneNumber)
       try:
          message = self.client.sms.messages.create(to=phoneNumberWithPlus,
                                                    from_=self.fromPhoneNumber,
