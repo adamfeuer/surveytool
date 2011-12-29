@@ -11,6 +11,8 @@
     {% endif %}
 
     <h3>{% trans "Edit Survey Project:" %}</h3>
+ 
+     {% include "sms/message-formatting.html" %}
 
      <form action="/sms/save_project" method="post">
        {% csrf_token %}

@@ -12,6 +12,8 @@
 
     <h3>{% trans "Make a new survey project:" %}</h3>
 
+     {% include "sms/message-formatting.html" %}
+
      <form action="/sms/new_project" method="post">
        {% csrf_token %}
        {{ form.as_p }}

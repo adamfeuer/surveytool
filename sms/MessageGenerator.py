@@ -114,13 +114,17 @@ class MessageGenerator:
       return messageDateTimes
 
    def getMessageText(self, user, userDetail, project, identifier):
+      allowed_variables = {
+         'first' : user.first_name,
+         'last': user.last_name,
+         'url':project.survey_url,
+         'id' : identifier,
+         }
       if (userDetail.smartphone is True):
-         message_base = project.smartphone_message
-         message = "%s %s, %s %s?u=%s" % (DEFAULT_SALUTATION, user.first_name, message_base, project.survey_url, identifier)
+         message_base = project.smartphone_message 
       else:
          message_base = project.text_message
-         message = "%s %s, %s" % (DEFAULT_SALUTATION, user.first_name, message_base)
-      return message
+      return message_base % allowed_variables
 
    def getIdentifier(self, project, user):
       identifier_num = int("%d%d%d" % (project.id, user.id, random.randint(0,MAXIMUM_RANDOM_ID)))
