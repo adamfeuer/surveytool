@@ -7,6 +7,9 @@ def flavor_is_prod():
 def flavor_is_not_prod():
    return not (settings.FLAVOR == settings.PROD)
 
+# Short URL-safe strings
+# from: http://stackoverflow.com/questions/561486/how-to-convert-an-integer-to-the-shortest-url-safe-string-in-python 
+
 ALPHABET = string.ascii_uppercase + string.ascii_lowercase + \
            string.digits
 ALPHABET_REVERSE = dict((c, i) for (i, c) in enumerate(ALPHABET))
