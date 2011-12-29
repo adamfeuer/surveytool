@@ -113,8 +113,14 @@ class MessageGenerator:
          messageDateTimes += self.getMessageDateTimesForSegment(segment, messagesPerDay, dayLength, guardTimeMinutes)
       return messageDateTimes
 
-   def getMessageText(self, user, project, identifier):
-      return "%s %s, %s %s?u=%s" % (DEFAULT_SALUTATION, user.first_name, project.smartphone_message, project.survey_url, identifier)
+   def getMessageText(self, user, userDetail, project, identifier):
+      if (userDetail.smartphone is True):
+         message_base = project.smartphone_message
+         message = "%s %s, %s %s?u=%s" % (DEFAULT_SALUTATION, user.first_name, message_base, project.survey_url, identifier)
+      else:
+         message_base = project.text_message
+         message = "%s %s, %s" % (DEFAULT_SALUTATION, user.first_name, message_base)
+      return message
 
    def getIdentifier(self, project, user):
       identifier_num = int("%d%d%d" % (project.id, user.id, random.randint(0,MAXIMUM_RANDOM_ID)))
@@ -133,7 +139,7 @@ class MessageGenerator:
       message.identifier = self.getIdentifier(project, user)
       message.phone_number = "%s" % userDetail.phone_number
       message.send_at = messageDateTime.strftime(TIME_FORMAT)
-      message.message = self.getMessageText(user, project, message.identifier)
+      message.message = self.getMessageText(user, userDetail, project, message.identifier)
       message.save()
 
    def generateMessages(self, user, project):
@@ -142,3 +148,5 @@ class MessageGenerator:
                                                             project.messages_per_day, project.guard_time_minutes)
       for messageDateTime in messageDateTimes:
          self.generateMessage(user, project, messageDateTime)
+
+

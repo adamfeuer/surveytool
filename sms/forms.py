@@ -33,7 +33,7 @@ class ProjectForm(forms.Form):
    name = forms.CharField(max_length=200, required=True)
    survey_url = forms.CharField(max_length=200, required=False)
    smartphone_message = forms.CharField(max_length=160,widget=forms.Textarea, required=False)
-   text_message = forms.CharField(max_length=160,widget=forms.Textarea, required=False)
+   text_message = forms.CharField(max_length=160,widget=forms.Textarea, required=False, label='Non-smartphone message')
    start_datetime = get_datetime_field()
    end_datetime = get_datetime_field()
    messages_per_day = forms.IntegerField(required=True, min_value=0, max_value=9999)
@@ -46,9 +46,9 @@ class ProjectForm(forms.Form):
 class SurveysForm(forms.Form):
    surveys = ProjectModelMultipleChoiceField(queryset=Project.objects.all(), required=False)
    user_id = forms.IntegerField(widget=forms.HiddenInput, required=False)
-   phone_number = forms.CharField(max_length=100, required=False)
-   smartphone = forms.BooleanField(required=False)
-   no_messages = forms.BooleanField(required=False)
+   phone_number = forms.CharField(max_length=100, required=False, label='Phone number starting with area code')
+   smartphone = forms.BooleanField(required=False,label='This phone is a smartphone')
+   no_messages = forms.BooleanField(required=False, label='Do not send me any text messages or emails')
 
 class MessageForm(forms.Form):
    id = forms.IntegerField(widget=forms.HiddenInput, required=False)
