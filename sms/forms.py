@@ -47,9 +47,17 @@ class ProjectForm(forms.Form):
 class SurveysForm(forms.Form):
    surveys = ProjectModelMultipleChoiceField(queryset=Project.objects.all(), required=False)
    user_id = forms.IntegerField(widget=forms.HiddenInput, required=False)
-   phone_number = USPhoneNumberField(required=False, label='Phone number starting with area code')
+   phone_number = USPhoneNumberField(required=False, label='Mobile phone number starting with area code')
    smartphone = forms.BooleanField(required=False,label='This phone is a smartphone')
    no_messages = forms.BooleanField(required=False, label='Do not send me any text messages or emails')
+
+class SignupForm(forms.Form):
+   surveys = ProjectModelMultipleChoiceField(queryset=Project.objects.all(), required=True, widget=forms.HiddenInput, label='')
+   first_name = forms.CharField(max_length=200, required=True)
+   last_name = forms.CharField(max_length=200, required=True)
+   email_address = forms.EmailField(max_length=200, required=True)
+   phone_number = USPhoneNumberField(required=False, label='Mobile phone number starting with area code')   
+   smartphone = forms.BooleanField(required=True,label='This phone is a smartphone')
 
 class MessageForm(forms.Form):
    id = forms.IntegerField(widget=forms.HiddenInput, required=False)

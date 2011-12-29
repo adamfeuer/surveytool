@@ -9,7 +9,7 @@ from django.shortcuts import redirect, render_to_response, get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib import messages
 
-from forms import SmsForm, ProjectForm, SurveysForm, MessageForm
+from forms import SmsForm, ProjectForm, SurveysForm, MessageForm, SignupForm
 from models import Project, Membership, Message, UserDetail
 from SmsSender import SmsSender
 from MessageGenerator import MessageGenerator
@@ -136,6 +136,25 @@ def surveys_select(request, username):
    return render_to_response('userena/survey_form.html',
                              {'form': form },
                              context_instance=RequestContext(request))
+
+
+def signup(request, surveys):
+   if request.method == 'POST': 
+      form = SurveysForm(request.POST) 
+      if form.is_valid():
+         #save_memberships_from_form(user, form)
+         return HttpResponseRedirect('/accounts/%s/' % username) 
+   else:
+      survey_queryset = []
+      initial_dict={'surveys' : survey_queryset}
+      form = SignupForm(initial=initial_dict)  
+     
+   return render_to_response('userena/signup_form.html',
+                             {'form': form },
+                             context_instance=RequestContext(request))
+
+
+
 
 @login_required
 @user_passes_test(lambda u: u.is_staff)
