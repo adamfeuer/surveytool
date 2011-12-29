@@ -44,6 +44,7 @@ class Membership(models.Model):
 class Message(models.Model):
    project = models.ForeignKey(Project)
    user_id = EncryptedCharField(max_length=100)
+   identifier = EncryptedCharField(max_length=100)
    phone_number = EncryptedCharField(max_length=100)
    email = EncryptedCharField(max_length=200)
    message = EncryptedCharField(max_length=160)

@@ -1,11 +1,15 @@
-import math, random, logging
+import math, random, logging, string
 from datetime import time, datetime, timedelta
+from django.conf import settings
+
 from sms.models import Message, UserDetail
+from common.util import num_encode
 
 logger = logging.getLogger(__name__)
 
 DEFAULT_SALUTATION = ""
 TIME_FORMAT = "%Y-%m-%d %H:%M"
+MAXIMUM_RANDOM_ID = 999999999
 
 class DaySegment:
    def __init__(self, startDateTime, segmentLength, dayStart, dayEnd):
@@ -109,8 +113,13 @@ class MessageGenerator:
          messageDateTimes += self.getMessageDateTimesForSegment(segment, messagesPerDay, dayLength, guardTimeMinutes)
       return messageDateTimes
 
-   def getMessageText(self, user, userDetail, project):
-      return "%s %s, %s %s?u=%s" % (DEFAULT_SALUTATION, user.first_name, project.smartphone_message, project.survey_url, user.id)      
+   def getMessageText(self, user, project, identifier):
+      return "%s %s, %s %s?u=%s" % (DEFAULT_SALUTATION, user.first_name, project.smartphone_message, project.survey_url, identifier)
+
+   def getIdentifier(self, project, user):
+      identifier_num = int("%d%d%d" % (project.id, user.id, random.randint(0,MAXIMUM_RANDOM_ID)))
+      return num_encode(identifier_num)
+      
    def generateMessage(self, user, project, messageDateTime):
       # todo - defaults if fields are not filled out, message validation
       userDetailList = UserDetail.objects.filter(user__id = user.id)
@@ -118,13 +127,13 @@ class MessageGenerator:
       if (userDetail.no_messages is True):
          logger.warn("INFO: not sending message to user %s because no_messages is True." % user.id)
          return
-      messageText = self.getMessageText(user, userDetail, project)
       message = Message()
       message.project = project
       message.user_id = "%s" % user.id
+      message.identifier = self.getIdentifier(project, user)
       message.phone_number = "%s" % userDetail.phone_number
-      message.message = messageText
       message.send_at = messageDateTime.strftime(TIME_FORMAT)
+      message.message = self.getMessageText(user, project, message.identifier)
       message.save()
 
    def generateMessages(self, user, project):
