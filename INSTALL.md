@@ -9,9 +9,9 @@ see https://github.com/mxcl/homebrew/wiki/installation
 
 2. Install python 2.7
 
-```bash
+    ```bash
     brew install python
-```
+    ```
 
 3. Then change system defaults to brew's cellar:
 
@@ -19,7 +19,7 @@ I found this article helpful: http://www.thisisthegreenroom.com/2011/installing-
 
 4. Make it so pip will install things in the right place without needing to use sudo
 
-```bash
+    ```bash
     sudo chown -R adamf:admin /usr/local/
     sudo chmod -R ug+rw /usr/local/
     cd /System/Library/
@@ -33,7 +33,7 @@ I found this article helpful: http://www.thisisthegreenroom.com/2011/installing-
     sudo mkdir  /Library/Python/build
     sudo chown adamf:admin /Library/Python/build/
     sudo chmod ug+rw /Library/Python/build
-```
+    ```
 
 5. Now set up virtualenv
 
