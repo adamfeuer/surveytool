@@ -76,22 +76,23 @@ def projects(request):
 @login_required
 @user_passes_test(lambda u: u.is_staff)
 def edit_project(request, project_id):
-   p = get_object_or_404(Project, pk=project_id)
-   form = ProjectForm({ 'name' : p.name,
-                        'id' : p.id,
-                        'survey_url' : p.survey_url,
-                        'smartphone_message' : p.smartphone_message,
-                        'text_message' : p.text_message,
-                        'start_datetime' : format_datetime(p.start_datetime),
-                        'end_datetime' : format_datetime(p.end_datetime),
-                        'messages_per_day' : p.messages_per_day,
-                        'guard_time_minutes' : p.guard_time_minutes,
-                        'synchronize_messages' : p.synchronize_messages,
-                        'day_start_time' : format_time(p.day_start_time),
-                        'day_end_time' : format_time(p.day_end_time)
+   project = get_object_or_404(Project, pk=project_id)
+   form = ProjectForm({ 'name' : project.name,
+                        'id' : project.id,
+                        'survey_url' : project.survey_url,
+                        'smartphone_message' : project.smartphone_message,
+                        'text_message' : project.text_message,
+                        'start_datetime' : format_datetime(project.start_datetime),
+                        'end_datetime' : format_datetime(project.end_datetime),
+                        'messages_per_day' : project.messages_per_day,
+                        'guard_time_minutes' : project.guard_time_minutes,
+                        'synchronize_messages' : project.synchronize_messages,
+                        'day_start_time' : format_time(project.day_start_time),
+                        'day_end_time' : format_time(project.day_end_time)
                         })
    return render_to_response('sms/edit_project.html',
-                             {'form': form },
+                             {'form': form,
+                              'project' : project },
                              context_instance=RequestContext(request))
 
 @login_required

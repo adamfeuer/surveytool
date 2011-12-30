@@ -2,7 +2,7 @@
 
 {% load i18n %}
 
-{% block head_title %}{% trans "Edit Survey Project" %}{% endblock %}
+{% block head_title %}{% trans "Edit Survey Project: " %}  {% endblock %}
 
 {% block content %}
 
@@ -10,8 +10,10 @@
     {{ error }}
     {% endif %}
 
-    <h3>{% trans "Edit Survey Project:" %}</h3>
+    <h3>{% trans "Edit Survey Project:" %} {{ project.name }}</h3>
  
+     ({{ project.id  }})
+
      {% include "sms/message-formatting.html" %}
 
      <form action="/sms/save_project" method="post">
