@@ -15,7 +15,7 @@ see https://github.com/mxcl/homebrew/wiki/installation
 
 3. Then change system defaults to brew's cellar:
 
-I found this article helpful: http://www.thisisthegreenroom.com/2011/installing-python-numpy-scipy-matplotlib-and-ipython-on-lion/
+    I found this article helpful: http://www.thisisthegreenroom.com/2011/installing-python-numpy-scipy-matplotlib-and-ipython-on-lion/
 
 4. Make it so pip will install things in the right place without needing to use sudo
 
@@ -44,7 +44,7 @@ I found this article helpful: http://www.thisisthegreenroom.com/2011/installing-
 
 6. Set up virtualenvwrapper
 
-See http://www.doughellmann.com/docs/virtualenvwrapper/
+    See http://www.doughellmann.com/docs/virtualenvwrapper/
 
 7. Make the Survey Tool virtualenv
 
@@ -97,11 +97,11 @@ See http://www.doughellmann.com/docs/virtualenvwrapper/
 
 14. Create a Profile object for the Admin user - necessary to log in
 
-Now visit http://localhost:8000/admin
+    Now visit http://localhost:8000/admin
 
 15. Log in!
 
-Visit http://localhost:8000
+    Visit http://localhost:8000
 
 
 
