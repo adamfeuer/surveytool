@@ -1,4 +1,4 @@
-{% extends 'userena/base_userena.html' %}
+{% extends 'base_signup.html' %}
 {% load i18n %}
 
 {% block content_title %}<h2 class="content-title">Survey Tool : Sign Up</h2>{% endblock %}
@@ -10,4 +10,5 @@
     {{ form.as_p }}
     <input type="submit" value="{% trans "Sign up" %}" />
 </form>
+
 {% endblock %}

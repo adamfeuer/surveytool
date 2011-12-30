@@ -58,6 +58,8 @@ class SignupForm(forms.Form):
    email_address = forms.EmailField(max_length=200, required=True)
    phone_number = USPhoneNumberField(required=False, label='Mobile phone number starting with area code')   
    smartphone = forms.BooleanField(required=True,label='This phone is a smartphone')
+   create_password = forms.CharField(max_length=50, required=True)
+   repeat_password = forms.CharField(max_length=50, required=True)
 
 class MessageForm(forms.Form):
    id = forms.IntegerField(widget=forms.HiddenInput, required=False)
