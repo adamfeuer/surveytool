@@ -5,7 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from userena.forms import SignupFormOnlyEmail
 
-from sms.models import Project, Membership
+from sms.models import Project, Membership, UserDetail
 
 def get_datetime_field():
    return StrippingDateTimeField(required=False, widget=forms.TextInput(attrs={'class':'jquery-datetime'}))
@@ -78,7 +78,6 @@ class SignupFormOnePage(SignupFormOnlyEmail):
    smartphone = forms.BooleanField(required=True,label=_('This phone is a smartphone'))
    def __init__(self, *args, **kwargs):
       super(SignupFormOnlyEmail, self).__init__(*args, **kwargs)
-      del self.fields['username']
       self.fields.keyOrder = [
             'email',
             'first_name',
@@ -88,3 +87,16 @@ class SignupFormOnePage(SignupFormOnlyEmail):
             'password1',
             'password2'
             ]
+
+   def save(self):
+      """ Saves the user details then calls the base class."""
+      phone_number, smartphone  = (self.cleaned_data['phone_number'],
+                                   self.cleaned_data['smartphone'])
+
+      user =  super(SignupFormOnePage, self).save()
+      userDetail = UserDetail()
+      userDetail.user = user
+      userDetail.phone_number = phone_number
+      userDetail.smartphone = smartphone
+      userDetail.save()
+      return user
