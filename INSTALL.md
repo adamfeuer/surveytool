@@ -87,7 +87,6 @@ see https://github.com/mxcl/homebrew/wiki/installation
     ```bash
     python manage.py syncdb
     ```
-
 13. create Admin user by following prompts
 
    ```bash
