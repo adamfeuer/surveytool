@@ -283,9 +283,7 @@ def get_user_details(user):
       return user_details_list[0]
 
 def save_memberships_from_form(user, form):
-   memberships = Membership.objects.filter(user = user.id)
-   for membership in memberships:
-      membership.delete()
+   delete_memberships_for_user(user)
    for project in form.cleaned_data['surveys']:
       membership = Membership(user = user, project = project)
       membership.save()
@@ -301,20 +299,29 @@ def save_memberships_from_form(user, form):
    return
 
 def save_memberships_from_surveys_param(user, surveys):
+   projects = get_projects_from_surveys_param(surveys)
+   delete_memberships_for_user(user)
+   save_memberships_for_projects(user, projects)
+   return
+
+def get_projects_from_surveys_param(surveys):
    decodedSurveys = base64.b64decode(surveys)
    surveyIds = decodedSurveys.split(',')
    projectIds = [ string.atoi(projectId) for projectId in surveyIds ]
    projects = []
    for projectId in projectIds:
       projects.append(Project.objects.get(pk=projectId))
+   return projects
+
+def delete_memberships_for_user(user):
    memberships = Membership.objects.filter(user = user.id)
    for membership in memberships:
       membership.delete()
+
+def save_memberships_for_projects(user, projects):
    for project in projects:
       membership = Membership(user = user, project = project)
       membership.save()
-   return
-
 
 def save_project_from_form(project, form):
    project.name = form.cleaned_data['name']

@@ -90,13 +90,13 @@ class SignupFormOnePage(SignupFormOnlyEmail):
 
    def save(self):
       """ Saves the user details then calls the base class."""
-      phone_number, smartphone  = (self.cleaned_data['phone_number'],
-                                   self.cleaned_data['smartphone'])
-
       user =  super(SignupFormOnePage, self).save()
+      user.first_name = self.cleaned_data['first_name']
+      user.last_name = self.cleaned_data['last_name']
+
       userDetail = UserDetail()
       userDetail.user = user
-      userDetail.phone_number = phone_number
-      userDetail.smartphone = smartphone
+      userDetail.phone_number = self.cleaned_data['phone_number']
+      userDetail.smartphone = self.cleaned_data['smartphone']
       userDetail.save()
       return user
