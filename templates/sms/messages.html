@@ -41,8 +41,8 @@
          <td>{{ message.sent }}</td>
          <td>{{ message.sent_status }}</td>
          <td>{{ message.sent_error_message }}</td> 
-         <td><a href="edit_message/{{message.id}}">Edit</a></td> 
-         <td><a href="delete_message/{{message.id}}">Delete</a></td> 
+         <td><a href="/sms/edit_message/{{message.id}}">Edit</a></td> 
+         <td><a href="/sms/delete_message/{{message.id}}">Delete</a></td> 
        </tr>
       {% endfor %}
     </table>
