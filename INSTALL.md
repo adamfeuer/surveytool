@@ -37,10 +37,10 @@ I found this article helpful: http://www.thisisthegreenroom.com/2011/installing-
 
 5. Now set up virtualenv
 
-```bash
+    ```bash
     pip install virtualenv
     pip install virtualenvwrapper
-```
+   ```
 
 6. Set up virtualenvwrapper
 
@@ -48,52 +48,52 @@ See http://www.doughellmann.com/docs/virtualenvwrapper/
 
 7. Make the Survey Tool virtualenv
 
-```bash
+    ```bash
     mkvirtualenv surveytool
     cd $WORKON_HOME/surveytool
-``
+    ```
 
 8. Install the required software in the Survey Tool virtualenv
 
-```bash
+    ```bash
     easy_install pip
     pip install -r requirements.pip
-```
+    ```
  
 9. Clone the Survey Tool git repository - this is a read-only link
 
-```bash
+    ```bash
     git clone git://github.com/adamfeuer/surveytool.git
     cd surveytool    
-```
+   ```
 
 10. Generate keyczar keys:
 
-```bash
+    ```bash
     bin/keyczart keys
-```
+    ```
 
 11. Create the Survey Tool config file
 
-```bash
+    ```bash
     vim $HOME/.surveytoolrc
     export TWILIO_FROM_PHONE_NUMBER='+1XXXYYYY'
     export TWILIO_ACCOUNT='your-twilio-account-string'
     export TWILIO_TOKEN='your-twilio-token'
-```
+    ```
 
 12. Set up the database
 
-```bash
+    ```bash
     python manage.py syncdb
-```
+    ```
 
 13. create Admin user by following prompts
 
-```bash
+   ```bash
    cd $WORKON_HOME/surveytool/surveytool
    bin/runserver
-```
+   ```
 
 14. Create a Profile object for the Admin user - necessary to log in
 
