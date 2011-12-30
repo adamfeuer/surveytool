@@ -5,7 +5,7 @@ These may vary with other versions of Mac OS X or other operating systems.
 
 1. Install brew
 
-see https://github.com/mxcl/homebrew/wiki/installation
+    See https://github.com/mxcl/homebrew/wiki/installation
 
 2. Install python 2.7
 
@@ -87,6 +87,7 @@ see https://github.com/mxcl/homebrew/wiki/installation
     ```bash
     python manage.py syncdb
     ```
+
 13. create Admin user by following prompts
 
    ```bash
