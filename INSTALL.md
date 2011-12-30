@@ -69,7 +69,8 @@ These may vary with other versions of Mac OS X or other operating systems.
 
 10. Generate keyczar keys:
 
-    ```bash
+    ```bash 
+    cd $WORKON_HOME/surveytool/surveytool
     bin/keyczart keys
     ```
 
@@ -90,9 +91,9 @@ These may vary with other versions of Mac OS X or other operating systems.
 
 13. create Admin user by following prompts
 
-   ```bash
+   ```bash  
    cd $WORKON_HOME/surveytool/surveytool
-   bin/runserver
+   bin/runserver.sh
    ```
 
 14. Create a Profile object for the Admin user - necessary to log in
