@@ -1,10 +1,11 @@
-import datetime, logging, time
+import datetime, logging, time, base64, string
 
 from django.core.context_processors import csrf
 from django.core.urlresolvers import reverse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.http import HttpResponseRedirect
+from django.contrib.auth import logout
 from django.contrib.auth.decorators import permission_required, login_required, user_passes_test 
 from django.shortcuts import redirect, render_to_response, get_object_or_404
 from django.contrib.auth.models import User
@@ -146,12 +147,11 @@ def surveys_select(request, username):
 def one_page_signup(request, surveys, signup_form=SignupFormOnePage,
            template_name='userena/signup_form.html'):
    form = SignupFormOnePage(initial = {'smartphone' : True })
-
    if request.method == 'POST':
       form = signup_form(request.POST, request.FILES)
       if form.is_valid():
          user = form.save()
-
+         save_memberships_from_surveys_param(user, surveys)
          redirect_to = reverse('userena_signup_complete',
                                kwargs={'username': user.username})
 
@@ -299,6 +299,22 @@ def save_memberships_from_form(user, form):
    user_details.no_messages = form.cleaned_data['no_messages']
    user_details.save()
    return
+
+def save_memberships_from_surveys_param(user, surveys):
+   decodedSurveys = base64.b64decode(surveys)
+   surveyIds = decodedSurveys.split(',')
+   projectIds = [ string.atoi(projectId) for projectId in surveyIds ]
+   projects = []
+   for projectId in projectIds:
+      projects.append(Project.objects.get(pk=projectId))
+   memberships = Membership.objects.filter(user = user.id)
+   for membership in memberships:
+      membership.delete()
+   for project in projects:
+      membership = Membership(user = user, project = project)
+      membership.save()
+   return
+
 
 def save_project_from_form(project, form):
    project.name = form.cleaned_data['name']
