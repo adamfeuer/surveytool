@@ -1,6 +1,10 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.localflavor.us.forms import USPhoneNumberField
+from django.utils.translation import ugettext_lazy as _
+
+from userena.forms import SignupFormOnlyEmail
+
 from sms.models import Project, Membership
 
 def get_datetime_field():
@@ -47,19 +51,9 @@ class ProjectForm(forms.Form):
 class SurveysForm(forms.Form):
    surveys = ProjectModelMultipleChoiceField(queryset=Project.objects.all(), required=False)
    user_id = forms.IntegerField(widget=forms.HiddenInput, required=False)
-   phone_number = USPhoneNumberField(required=False, label='Mobile phone number starting with area code')
-   smartphone = forms.BooleanField(required=False,label='This phone is a smartphone')
-   no_messages = forms.BooleanField(required=False, label='Do not send me any text messages or emails')
-
-class SignupForm(forms.Form):
-   surveys = ProjectModelMultipleChoiceField(queryset=Project.objects.all(), required=True, widget=forms.HiddenInput, label='')
-   first_name = forms.CharField(max_length=200, required=True)
-   last_name = forms.CharField(max_length=200, required=True)
-   email_address = forms.EmailField(max_length=200, required=True)
-   phone_number = USPhoneNumberField(required=False, label='Mobile phone number starting with area code')   
-   smartphone = forms.BooleanField(required=True,label='This phone is a smartphone')
-   create_password = forms.CharField(max_length=50, required=True)
-   repeat_password = forms.CharField(max_length=50, required=True)
+   phone_number = USPhoneNumberField(required=False, label=_('Mobile phone number starting with area code'))
+   smartphone = forms.BooleanField(required=False,label=_('This phone is a smartphone'))
+   no_messages = forms.BooleanField(required=False, label=_('Do not send me any text messages or emails'))
 
 class MessageForm(forms.Form):
    id = forms.IntegerField(widget=forms.HiddenInput, required=False)
@@ -72,3 +66,25 @@ class MessageForm(forms.Form):
    sent = forms.BooleanField(required=False)
    sent_status = forms.BooleanField(required=False)
    sent_error_message = forms.CharField(max_length=200, required=False)
+
+class SignupFormOnePage(SignupFormOnlyEmail):
+   first_name = forms.CharField(label=_(u'First name'),
+                                 max_length=30,
+                                 required=False)
+   last_name = forms.CharField(label=_(u'Last name'),
+                                max_length=30,
+                                required=False)
+   phone_number = USPhoneNumberField(required=False, label=_('Mobile phone number starting with area code'))
+   smartphone = forms.BooleanField(required=True,label=_('This phone is a smartphone'))
+   def __init__(self, *args, **kwargs):
+      super(SignupFormOnlyEmail, self).__init__(*args, **kwargs)
+      del self.fields['username']
+      self.fields.keyOrder = [
+            'email',
+            'first_name',
+            'last_name',
+            'phone_number',
+            'smartphone',
+            'password1',
+            'password2'
+            ]

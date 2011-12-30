@@ -1,8 +1,8 @@
 {% extends 'userena/base_userena.html' %}
 {% load i18n %}
 
-{% block title %}{{ profile.user.username }}'s {% trans "profile" %}.{% endblock %}
-{% block content_title %}<h2 class="content-title">{{ profile.user.username }} {% if profile.user.get_full_name %}({{ profile.user.get_full_name }}){% endif %}</h2>{% endblock %}
+{% block title %}{{ profile.user.email }}'s {% trans "profile" %}.{% endblock %}
+{% block content_title %}<h2 class="content-title">{{ profile.user.email }} {% if profile.user.get_full_name %}({{ profile.user.get_full_name }}){% endif %}</h2>{% endblock %}
 
 {% block content %}
 

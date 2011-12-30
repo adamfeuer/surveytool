@@ -1,6 +1,7 @@
 import datetime, logging, time
 
 from django.core.context_processors import csrf
+from django.core.urlresolvers import reverse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.http import HttpResponseRedirect
@@ -8,8 +9,11 @@ from django.contrib.auth.decorators import permission_required, login_required, 
 from django.shortcuts import redirect, render_to_response, get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib import messages
+from django.views.generic.simple import direct_to_template
 
-from forms import SmsForm, ProjectForm, SurveysForm, MessageForm, SignupForm
+from userena.decorators import secure_required
+
+from forms import SmsForm, ProjectForm, SurveysForm, MessageForm, SignupFormOnePage
 from models import Project, Membership, Message, UserDetail
 from SmsSender import SmsSender
 from MessageGenerator import MessageGenerator
@@ -137,11 +141,29 @@ def surveys_select(request, username):
                              {'form': form },
                              context_instance=RequestContext(request))
 
-def one_page_signup(request, surveys):
-   form = SignupForm()  
-   return render_to_response('userena/signup.html',
-                             {'form': form },
-                             context_instance=RequestContext(request))
+@secure_required
+def one_page_signup(request, surveys, signup_form=SignupFormOnePage,
+           template_name='userena/signup_form.html'):
+   form = SignupFormOnePage(initial = {'smartphone' : True })
+
+   if request.method == 'POST':
+      form = signup_form(request.POST, request.FILES)
+      if form.is_valid():
+         user = form.save()
+
+         redirect_to = reverse('userena_signup_complete',
+                               kwargs={'username': user.username})
+
+         # A new signed user should logout the old one.
+         if request.user.is_authenticated():
+            logout(request)
+         return redirect(redirect_to)
+
+   extra_context = dict()
+   extra_context['form'] = form
+   return direct_to_template(request,
+                             template_name,
+                             extra_context=extra_context)
 
 @login_required
 @user_passes_test(lambda u: u.is_staff)
