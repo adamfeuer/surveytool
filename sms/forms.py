@@ -53,7 +53,7 @@ class SurveysForm(forms.Form):
    user_id = forms.IntegerField(widget=forms.HiddenInput, required=False)
    phone_number = USPhoneNumberField(required=False, label=_('Mobile phone number starting with area code'))
    smartphone = forms.BooleanField(required=False,label=_('This phone is a smartphone'))
-   no_messages = forms.BooleanField(required=False, label=_('Do not send me any further text messages or emails'), help_text='If you need to stop getting SMS messages, you can check this box.')
+   no_messages = forms.BooleanField(required=False, label=_('Do not send me any further text messages or emails'), help_text='If you need to stop getting SMS messages, check this box.')
 
 class MessageForm(forms.Form):
    id = forms.IntegerField(widget=forms.HiddenInput, required=False)
