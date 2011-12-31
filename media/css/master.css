@@ -237,7 +237,7 @@ h1{
 }
 
 h2.content-title{
-	font-size: 1.5em;
+	font-size: 1em;
 	margin: 10px;
     padding: 15px 15px 12px;	
     background: #e7e2de no-repeat 90px 30px;
@@ -251,8 +251,8 @@ h2.content-title{
 }
 
 h2.intro{
-    font-size: 1.8em;
-    margin: 10px 20px 9px 380px;
+    font-size: 1em;
+    margin: 10px 20px 9px 100px;
     padding: 0 0 5px;
     background: url(../img/stripe.png) repeat-x 0 bottom;
 }
@@ -900,21 +900,32 @@ min-height: 52px;
 ................................... */
 
 .message-table {
-  width: 100%;
-  font-size: small;
+   width: 100%;
+   font-size: small;
 }
 
 .message-table tr {
 }
 
 .message-table th {
-  padding-bottom: 10px;
+   padding-bottom: 10px;
 }
 
 .message-table td {
-  padding-right: 20px;
-  padding-left: 20px;
-  padding-bottom: 10px;
+   padding-right: 20px;
+   padding-left: 20px;
+   padding-bottom: 10px;
 }
 
+.helptext {
+   position: absolute;
+   bottom: 0;;
+   right: 0;;
+   float: right;
+   display: block;
+   vertical-align: bottom;
+}
 
+#id_mugshot {
+   margin-bottom: 20px;
+}

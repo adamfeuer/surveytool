@@ -2,8 +2,7 @@
 {% load i18n %}
 
 {% block title %}{{ profile.user.email }}'s {% trans "profile" %}.{% endblock %}
-{% block content_title %}<h2 class="content-title">{{ profile.user.email }} {% if profile.user.get_full_name %}({{ profile.user.get_full_name }}){% endif %}</h2>{% endblock %}
-
+{% block content_title %}<h2 class="content-title">Account &raquo; {{ account.user.username }}</h2>{% endblock %}
 {% block content %}
 
 
@@ -23,6 +22,7 @@
         {% if profile.user.get_full_name %}
         <p><strong>{% trans "Name" %}</strong><br /> {{ profile.user.get_full_name }}</p>
         {% endif %}
+        <p><strong>{% trans "Email address" %}</strong><br/>{{ profile.user.email }}</p>
         {% if profile.age != 0 %}
         <p><strong>{% trans "Age" %}</strong><br /> {{ profile.age }}</p>
         {% endif %}
