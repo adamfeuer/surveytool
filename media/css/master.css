@@ -923,7 +923,7 @@ min-height: 52px;
    right: 0;;
    float: right;
    display: block;
-   vertical-align: bottom;
+   width: 220px;
 }
 
 #id_mugshot {
