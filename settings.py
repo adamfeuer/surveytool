@@ -15,14 +15,6 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'surveytool.db',
-        'TEST_NAME': ':memory:',
-    }
-}
-
 if DEBUG:
     # Use the Python SMTP debugging server. You can run it with:
     # ``python -m smtpd -n -c DebuggingServer localhost:1025``.
@@ -163,9 +155,6 @@ SOUTH_TESTS_MIGRATE = False
 
 # Guardian
 ANONYMOUS_USER_ID = -1
-
-# Key Czar and django-extensions
-ENCRYPTED_FIELD_KEYS_DIR = 'keys'
 
 # Survey Tool
 
