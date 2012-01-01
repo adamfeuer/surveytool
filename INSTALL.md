@@ -98,8 +98,8 @@ These may vary with other versions of Mac OS X or other operating systems.
 
    ```bash  
    cd $WORKON_HOME/surveytool/surveytool
-   bin/runserver.sh
-   ```
+   bin/runserver.sh```
+
 15. Create a Profile object for the Admin user - necessary to log in
 
     Now visit http://localhost:8000/admin
