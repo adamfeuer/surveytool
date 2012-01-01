@@ -94,13 +94,12 @@ These may vary with other versions of Mac OS X or other operating systems.
     python manage.py syncdb
     ```
 
-14. create Admin user by following prompts
+14. Create Admin user by following prompts
 
    ```bash  
    cd $WORKON_HOME/surveytool/surveytool
    bin/runserver.sh
    ```
-
 15. Create a Profile object for the Admin user - necessary to log in
 
     Now visit http://localhost:8000/admin
