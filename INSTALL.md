@@ -57,24 +57,29 @@ These may vary with other versions of Mac OS X or other operating systems.
 
     ```bash
     easy_install pip
-    pip install -r requirements.pip
+    pip install pip --upgrade
     ```
  
 9. Clone the Survey Tool git repository - this is a read-only link
 
     ```bash
     git clone git://github.com/adamfeuer/surveytool.git
-    cd surveytool    
+    cd surveytool   
    ```
 
-10. Generate keyczar keys:
+10. Install the required software in the Survey Tool virtualenv
+    ```bash
+    pip install -r requirements.pip
+    ```
+
+11. Generate keyczar keys:
 
     ```bash 
     cd $WORKON_HOME/surveytool/surveytool
     bin/keyczart keys
     ```
 
-11. Create the Survey Tool config file
+12. Create the Survey Tool config file
 
     ```bash
     vim $HOME/.surveytoolrc
@@ -83,27 +88,24 @@ These may vary with other versions of Mac OS X or other operating systems.
     export TWILIO_TOKEN='your-twilio-token'
     ```
 
-12. Set up the database
+13. Set up the database
 
     ```bash
     python manage.py syncdb
     ```
 
-13. create Admin user by following prompts
+14. create Admin user by following prompts
 
    ```bash  
    cd $WORKON_HOME/surveytool/surveytool
    bin/runserver.sh
    ```
 
-14. Create a Profile object for the Admin user - necessary to log in
+15. Create a Profile object for the Admin user - necessary to log in
 
     Now visit http://localhost:8000/admin
 
-15. Log in!
+16. Log in!
 
     Visit http://localhost:8000
-
-
-
 
