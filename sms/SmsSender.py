@@ -1,4 +1,4 @@
-import os, time, logging, string
+import time, logging, string
 from twilio import TwilioRestException
 from twilio.rest import TwilioRestClient
 from django.conf import settings
@@ -15,9 +15,9 @@ class SmsStatus:
 
 class SmsSender:
    def __init__(self):
-      self.fromPhoneNumber = os.environ['TWILIO_FROM_PHONE_NUMBER']
-      account = os.environ['TWILIO_ACCOUNT']
-      token = os.environ['TWILIO_TOKEN']
+      self.fromPhoneNumber = settings.TWILIO_FROM_PHONE_NUMBER
+      account = settings.TWILIO_ACCOUNT
+      token = settings.TWILIO_TOKEN
       self.client = TwilioRestClient(account, token)
 
    def removeDashes(self, phoneNumber):
@@ -41,8 +41,10 @@ class SmsSender:
          message = self.client.sms.messages.create(to=phoneNumberWithPlus,
                                                    from_=self.fromPhoneNumber,
                                                    body=message)
+         logger.info("Sent message to %s." % phoneNumber)
       except TwilioRestException as e:
          error_message = "'%s'" % e
+         logger.error("Twilio error: %s" % error_message)
          return SmsStatus(SmsStatus.ERROR, error_message)
       return SmsStatus(SmsStatus.OK, message.status)
 

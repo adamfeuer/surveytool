@@ -83,9 +83,11 @@ These may vary with other versions of Mac OS X or other operating systems.
 
     ```bash
     vim $HOME/.surveytoolrc
-    export TWILIO_FROM_PHONE_NUMBER='+1XXXYYYY'
-    export TWILIO_ACCOUNT='your-twilio-account-string'
-    export TWILIO_TOKEN='your-twilio-token'
+    
+    [Twilio]
+    TWILIO_FROM_PHONE_NUMBER: +1XXXYYYY
+    TWILIO_ACCOUNT: your-twilio-account-string
+    TWILIO_TOKEN: your-twilio-token
     ```
 
 13. Set up the database
