@@ -85,9 +85,15 @@ These may vary with other versions of Mac OS X or other operating systems.
     vim $HOME/.surveytoolrc
     
     [Twilio]
-    TWILIO_FROM_PHONE_NUMBER: +1XXXYYYY
-    TWILIO_ACCOUNT: your-twilio-account-string
-    TWILIO_TOKEN: your-twilio-token
+    TWILIO_FROM_PHONE_NUMBER = +1XXXYYYY
+    TWILIO_ACCOUNT = your-twilio-account-string
+    TWILIO_TOKEN = your-twilio-token
+
+    [client]
+    database = surveytool
+    user = surveytool
+    password = your-password
+    default-character-set = utf8
     ```
 
 13. Set up the database
@@ -96,7 +102,7 @@ These may vary with other versions of Mac OS X or other operating systems.
     python manage.py syncdb
     ```
 
-14. Create Admin user by following prompts
+14. Start the server
 
    ```bash  
    cd $WORKON_HOME/surveytool/surveytool
