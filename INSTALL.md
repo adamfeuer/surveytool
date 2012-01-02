@@ -102,18 +102,24 @@ These may vary with other versions of Mac OS X or other operating systems.
     python manage.py syncdb
     ```
 
-14. Start the server
+14. Set up static resources
+
+    ```bash
+    python manage.py collectstatic --settings=conf.dev.settings
+    ```
+
+15. Start the server
 
    ```bash  
    cd $WORKON_HOME/surveytool/surveytool
    bin/runserver.sh
    ```
 
-15. Create a Profile object for the Admin user - necessary to log in
+16. Create a Profile object for the Admin user - necessary to log in
 
     Now visit http://localhost:8000/admin
 
-16. Log in!
+17. Log in!
 
     Visit http://localhost:8000
 

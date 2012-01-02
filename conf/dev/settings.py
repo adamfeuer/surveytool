@@ -1,13 +1,15 @@
-import ConfigParser
+import os, ConfigParser
 from  surveytool.settings import *
 
-SURVEYTOOL_CONFIG = '/opt/webapps/surveytool/surveytool.config'
+SURVEYTOOL_CONFIG = os.path.join(os.environ['HOME'], '.surveytoolrc')
 config = ConfigParser.RawConfigParser()
 config.read(SURVEYTOOL_CONFIG)
 TWILIO_FROM_PHONE_NUMBER = config.get('Twilio', 'TWILIO_FROM_PHONE_NUMBER')
 TWILIO_ACCOUNT = config.get('Twilio', 'TWILIO_ACCOUNT')
 TWILIO_TOKEN = config.get('Twilio', 'TWILIO_TOKEN')
 
+STATIC_ROOT = 'static'
+STATIC_URL = '/static/'
 LOGFILE_PATH = 'logs/surveytool.log'
 
 LOGGING = {
