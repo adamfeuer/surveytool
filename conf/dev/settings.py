@@ -1,6 +1,13 @@
 import ConfigParser
 from  surveytool.settings import *
 
+SURVEYTOOL_CONFIG = '/opt/webapps/surveytool/surveytool.config'
+config = ConfigParser.RawConfigParser()
+config.read(SURVEYTOOL_CONFIG)
+TWILIO_FROM_PHONE_NUMBER = config.get('Twilio', 'TWILIO_FROM_PHONE_NUMBER')
+TWILIO_ACCOUNT = config.get('Twilio', 'TWILIO_ACCOUNT')
+TWILIO_TOKEN = config.get('Twilio', 'TWILIO_TOKEN')
+
 LOGFILE_PATH = 'logs/surveytool.log'
 
 LOGGING = {
@@ -59,13 +66,6 @@ ENCRYPTED_FIELD_KEYS_DIR = 'keys'
 FLAVOR = DEV
 DEBUG = True
 TEMPLATE_DEBUG = True
-
-SURVEYTOOL_CONFIG = '/opt/webapps/surveytool/surveytool.config'
-config = ConfigParser.RawConfigParser()
-config.read(SURVEYTOOL_CONFIG)
-TWILIO_FROM_PHONE_NUMBER = config.get('Twilio', 'TWILIO_FROM_PHONE_NUMBER')
-TWILIO_ACCOUNT = config.get('Twilio', 'TWILIO_ACCOUNT')
-TWILIO_TOKEN = config.get('Twilio', 'TWILIO_TOKEN')
 
 ALLOWED_PHONE_NUMBERS = ['206-330-4774']
 #ALLOWED_PHONE_NUMBERS = []

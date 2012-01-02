@@ -1,6 +1,13 @@
 import ConfigParser
 from  surveytool.settings import *
 
+SURVEYTOOL_CONFIG = '/opt/webapps/surveytool/surveytool.config'
+config = ConfigParser.RawConfigParser()
+config.read(SURVEYTOOL_CONFIG)
+TWILIO_FROM_PHONE_NUMBER = config.get('Twilio', 'TWILIO_FROM_PHONE_NUMBER')
+TWILIO_ACCOUNT = config.get('Twilio', 'TWILIO_ACCOUNT')
+TWILIO_TOKEN = config.get('Twilio', 'TWILIO_TOKEN')
+
 STATIC_ROOT = '/opt/webapps/surveytool/surveytool/static'
 STATIC_URL = '/static/'
 LOGFILE_PATH = '/opt/webapps/surveytool/logs/surveytool.log'
@@ -46,13 +53,19 @@ LOGGING = {
     }
 }
 
-DATABASES = {  
+DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': '/opt/webapps/surveytool/surveytool/surveytool.db',
-        'TEST_NAME': ':memory:',
+        'ENGINE': 'django.db.backends.mysql',
+        'OPTIONS': {
+            'read_default_file': SURVEYTOOL_CONFIG
+        },
     }
 }
+
+DATABASE_OPTIONS = {
+   "init_command": "SET storage_engine=INNODB", # XXX: performance hit...
+}
+
 
 # Key Czar and django-extensions
 ENCRYPTED_FIELD_KEYS_DIR = '/opt/webapps/surveytool/surveytool/keys'
@@ -68,11 +81,4 @@ TEMPLATE_DEBUG = True
 
 #ALLOWED_PHONE_NUMBERS = []
 ALLOWED_PHONE_NUMBERS = ['206-330-4774']
-
-SURVEYTOOL_CONFIG = '/opt/webapps/surveytool/surveytool.config'
-config = ConfigParser.RawConfigParser()
-config.read(SURVEYTOOL_CONFIG)
-TWILIO_FROM_PHONE_NUMBER = config.get('Twilio', 'TWILIO_FROM_PHONE_NUMBER')
-TWILIO_ACCOUNT = config.get('Twilio', 'TWILIO_ACCOUNT')
-TWILIO_TOKEN = config.get('Twilio', 'TWILIO_TOKEN')
 

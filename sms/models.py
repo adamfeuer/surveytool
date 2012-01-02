@@ -47,7 +47,7 @@ class Message(models.Model):
    identifier = EncryptedCharField(max_length=100)
    phone_number = EncryptedCharField(max_length=100)
    email = EncryptedCharField(max_length=200)
-   message = EncryptedCharField(max_length=160)
+   message = EncryptedCharField(max_length=300)
    send_at = models.DateTimeField()
    sent = models.BooleanField()
    sent_status = models.BooleanField()
