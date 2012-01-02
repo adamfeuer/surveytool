@@ -59,6 +59,8 @@ class MessageGenerator:
 
    def getNumberOfMessagesForSegment(self, segment, messagesPerDay, dayLength):
       dayLengthInSeconds = dayLength.total_seconds()
+      if dayLengthInSeconds == 0:
+         return 0
       messagesPerSecond = float(messagesPerDay) / float(dayLengthInSeconds)
       result = int(messagesPerSecond * segment.dayLength.total_seconds())
       return result
@@ -82,6 +84,8 @@ class MessageGenerator:
 
       """
       messagesForSegment = self.getNumberOfMessagesForSegment(segment, messagesPerDay, dayLength)
+      if messagesForSegment == 0:
+         return []
       intervalLengthInSeconds = int(segment.dayLength.total_seconds() / messagesForSegment)
       guardTimeInSeconds = guardTimeMinutes * 60
       interval = 0
@@ -135,7 +139,7 @@ class MessageGenerator:
       userDetailList = UserDetail.objects.filter(user__id = user.id)
       userDetail = userDetailList[0]
       if (userDetail.no_messages is True):
-         logger.warn("INFO: not sending message to user %s because no_messages is True." % user.id)
+         logger.warn("INFO: not generating message for user %s because no_messages is True." % user.id)
          return
       message = Message()
       message.project = project
