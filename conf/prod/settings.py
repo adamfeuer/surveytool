@@ -1,6 +1,8 @@
 import ConfigParser
 from  surveytool.settings import *
 
+STATIC_ROOT = '/opt/webapps/surveytool/surveytool/static'
+STATIC_URL = '/static/'
 LOGFILE_PATH = '/opt/webapps/surveytool/logs/surveytool.log'
 
 LOGGING = {
@@ -51,6 +53,7 @@ DATABASES = {
         'TEST_NAME': ':memory:',
     }
 }
+
 # Key Czar and django-extensions
 ENCRYPTED_FIELD_KEYS_DIR = '/opt/webapps/surveytool/surveytool/keys'
 

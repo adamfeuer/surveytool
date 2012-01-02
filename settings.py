@@ -37,7 +37,6 @@ MEDIA_ROOT = abspath(PROJECT_ROOT, 'media')
 DOCUMENT_ROOT = abspath(PROJECT_ROOT, 'docs')
 
 MEDIA_URL = '/media/'
-
 ADMIN_MEDIA_PREFIX = '/media/admin/'
 
 SECRET_KEY = 'sx405#tc)5m@s#^jh5l7$k#cl3ekg)jtbo2ds(n(kw@gp0t7x@'
@@ -61,6 +60,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.debug",
     "django.core.context_processors.i18n",
     "django.core.context_processors.media",
+    'django.core.context_processors.static',
     "django.contrib.messages.context_processors.messages",
     "django.core.context_processors.request",
 )
@@ -87,6 +87,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.admin',
+    'django.contrib.staticfiles',
     'easy_thumbnails',
     'guardian',
     'south',
@@ -116,7 +117,6 @@ SOUTH_TESTS_MIGRATE = False
 ANONYMOUS_USER_ID = -1
 
 # Survey Tool
-
 PROD = "prod"
 TEST = "test"
 DEV = "dev"
