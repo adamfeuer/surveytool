@@ -97,11 +97,20 @@ These may vary with other versions of Mac OS X or other operating systems.
 
 12. Install Postgres database
 
-    (MysSQL is known to not work.)
+    ```bash
+    brew install postgresql
+    ```
+
+    (MysSQL is known to not work.) Follow the installation
+    instructions that are printed after the install succeeds.
 
 12. Set up the database
 
     Create database, user, password
+    ```bash
+    createuser -D -A -P surveytool
+    createdb -O surveytool surveytool
+    ```
 
 13. Set up the database
 
