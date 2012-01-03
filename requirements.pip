@@ -1,5 +1,4 @@
 Django==1.3.1
-MySQL-python==1.2.3
 PIL==1.1.7
 PyJWT==0.1.2
 South==0.7.3
@@ -11,6 +10,7 @@ django-userena==1.0.2
 easy-thumbnails==1.0-alpha-21
 httplib2==0.7.1
 ipython==0.12
+psycopg2==2.4.4
 pyasn1==0.1.2
 pycrypto==2.4.1
 python-keyczar==0.7b

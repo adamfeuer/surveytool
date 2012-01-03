@@ -7,6 +7,9 @@ config.read(SURVEYTOOL_CONFIG)
 TWILIO_FROM_PHONE_NUMBER = config.get('Twilio', 'TWILIO_FROM_PHONE_NUMBER')
 TWILIO_ACCOUNT = config.get('Twilio', 'TWILIO_ACCOUNT')
 TWILIO_TOKEN = config.get('Twilio', 'TWILIO_TOKEN')
+DATABASE_USER = config.get('Database', 'user')
+DATABASE_PASSWORD = config.get('Database', 'password')
+DATABASE_DB = config.get('Database', 'database')
 
 STATIC_ROOT = '/opt/webapps/surveytool/surveytool/static'
 STATIC_URL = '/static/'
@@ -55,17 +58,13 @@ LOGGING = {
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'OPTIONS': {
-            'read_default_file': SURVEYTOOL_CONFIG
-        },
-    }
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': DATABASE_DB,
+        'ENGINE': 'postgresql_psycopg2',
+        'USER': DATABASE_USER,
+        'PASSWORD': DATABASE_PASSWORD,
+        }
 }
-
-DATABASE_OPTIONS = {
-   "init_command": "SET storage_engine=INNODB", # XXX: performance hit...
-}
-
 
 # Key Czar and django-extensions
 ENCRYPTED_FIELD_KEYS_DIR = '/opt/webapps/surveytool/surveytool/keys'

@@ -89,12 +89,19 @@ These may vary with other versions of Mac OS X or other operating systems.
     TWILIO_ACCOUNT = your-twilio-account-string
     TWILIO_TOKEN = your-twilio-token
 
-    [client]
+    [Database]
     database = surveytool
     user = surveytool
     password = your-password
-    default-character-set = utf8
     ```
+
+12. Install Postgres database
+
+    (MysSQL is known to not work.)
+
+12. Set up the database
+
+    Create database, user, password
 
 13. Set up the database
 
