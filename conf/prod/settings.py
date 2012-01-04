@@ -1,7 +1,7 @@
 import ConfigParser
 from  surveytool.settings import *
 
-SURVEYTOOL_CONFIG = '/opt/webapps/surveytool/surveytool.config'
+SURVEYTOOL_CONFIG = '/opt/webapps/research.liveingreatness.com/surveytool.config'
 config = ConfigParser.RawConfigParser()
 config.read(SURVEYTOOL_CONFIG)
 TWILIO_FROM_PHONE_NUMBER = config.get('Twilio', 'TWILIO_FROM_PHONE_NUMBER')
@@ -12,9 +12,9 @@ DATABASE_USER = config.get('Database', 'user')
 DATABASE_PASSWORD = config.get('Database', 'password')
 DATABASE_DB = config.get('Database', 'database')
 
-STATIC_ROOT = '/opt/webapps/surveytool/surveytool/static'
+STATIC_ROOT = '/opt/webapps/research.liveingreatness.com/surveytool/static'
 STATIC_URL = '/static/'
-LOGFILE_PATH = '/opt/webapps/surveytool/logs/surveytool.log'
+LOGFILE_PATH = '/opt/webapps/research.liveingreatness.com/logs/surveytool.log'
 
 LOGGING = {
     'version': 1,
@@ -69,7 +69,7 @@ DATABASES = {
 }
 
 # Key Czar and django-extensions
-ENCRYPTED_FIELD_KEYS_DIR = '/opt/webapps/surveytool/surveytool/keys'
+ENCRYPTED_FIELD_KEYS_DIR = '/opt/webapps/research.liveingreatness.com/surveytool/keys'
 
 # SurveyTool settings
 FLAVOR = PROD
