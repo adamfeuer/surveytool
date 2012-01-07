@@ -76,6 +76,8 @@ FLAVOR = PROD
 DEBUG = False
 TEMPLATE_DEBUG = False
 
+CRONJOB_LOCK_PREFIX = 'lock.staging'
+
 #FLAVOR = DEV
 #DEBUG = True
 #TEMPLATE_DEBUG = True
