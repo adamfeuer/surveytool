@@ -4,6 +4,11 @@ import sys, os, csv
 USER_ID = "Message Identifier"
 
 class Matcher:
+   """
+   Takes Message Identifier CSV file from Survey Tool and Funnel results CSV
+   and combines them using the message identifiers to match up each row.
+
+   """
    def __init__(self):
       pass
 
