@@ -32,13 +32,18 @@
       <p><input type="submit" value="Generate Messages For Project" /></p>
      </form>
 
-     <form action="/sms/delete_messages/{{form.id.value}}/" method="post">
-       {% csrf_token %}
-      <p><input type="submit" value="Delete All Messages For Project" /></p>
+     <form action="/sms/project_messages_csv/{{form.id.value}}/" method="post">
+        {% csrf_token %}
+     <p><input type="submit" value="Download Identifer CSV file" /></p>
      </form>
 
      <p>&nbsp;</p>
      <p>&nbsp;</p>
+
+     <form action="/sms/delete_messages/{{form.id.value}}/" method="post">
+       {% csrf_token %}
+      <p><input type="submit" value="Delete All Messages For Project" /></p>
+     </form>
 
      <form action="/sms/delete_project/{{form.id.value}}/" method="post">
        {% csrf_token %}

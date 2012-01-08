@@ -1,10 +1,10 @@
-import datetime, logging, time, base64, string
+import datetime, logging, time, base64, string, csv
 
 from django.core.context_processors import csrf
 from django.core.urlresolvers import reverse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import permission_required, login_required, user_passes_test 
 from django.shortcuts import redirect, render_to_response, get_object_or_404
@@ -265,6 +265,44 @@ def delete_messages_for_project(request, project_id):
    return render_to_response('sms/messages.html',
                              { 'sms_messages' : sms_messages },
                              context_instance=RequestContext(request))
+
+
+@login_required
+@user_passes_test(lambda u: u.is_staff)
+def project_messages_csv(request, project_id):
+    project = Project.objects.get(pk = project_id)
+    filename = "messages-%s" % project.name
+    filename = filename.replace(' ', '-').lower()
+    csv_rows = get_messages_for_project_csv_rows(project_id)
+    response = HttpResponse(mimetype='text/csv')
+    response['Content-Disposition'] = 'attachment; filename=%s' % filename
+    writer = csv.writer(response)
+    for csv_row in csv_rows:
+       writer.writerow(csv_row)
+    return response
+
+# Utility functions
+
+def get_messages_for_project_csv_rows(project_id):
+   sms_messages = Message.objects.filter(project = project_id).order_by('send_at')
+   csv_rows = []
+   csv_rows.append(['Message ID', 'Project ID', 'Project Name', 'User ID', 'User First Name', 'User Last Name', 'User Phone Number', 'Message Identifier', 'Send At', 'Sent Status'])
+   for sms_message in sms_messages:
+      user = User.objects.get(pk = sms_message.user_id)
+      csv_row = []
+      csv_row.append(sms_message.id)
+      csv_row.append(sms_message.project.id)
+      csv_row.append(sms_message.project.name)
+      csv_row.append(sms_message.user_id)
+      csv_row.append(user.first_name)
+      csv_row.append(user.last_name)
+      csv_row.append(sms_message.phone_number)
+      csv_row.append(sms_message.identifier)
+      csv_row.append(sms_message.send_at)
+      csv_row.append(sms_message.sent_status)
+      print csv_row
+      csv_rows.append(csv_row)
+   return csv_rows
 
 def get_surveys(user):
    memberships = Membership.objects.filter(user = user.id)

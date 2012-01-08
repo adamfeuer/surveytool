@@ -117,7 +117,7 @@ SOUTH_TESTS_MIGRATE = False
 ANONYMOUS_USER_ID = -1
 
 # Survey Tool
-VERSION = "0.1"
+VERSION = "0.1.1"
 PROD = "prod"
 TEST = "test"
 DEV = "dev"

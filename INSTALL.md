@@ -1,3 +1,6 @@
+>Survey Tool has been tested on Mac and Linux. Linux installation
+instructions are after the Mac instructions.
+
 Mac OS X Lion installation instructions. 
 ========================================
 
@@ -10,7 +13,7 @@ These may vary with other versions of Mac OS X or other operating systems.
 2. Install python 2.7
 
     ```bash
-    brew install python
+    brew install python --framework --universal
     ```
 
 3. Then change system defaults to brew's cellar:
@@ -82,7 +85,7 @@ These may vary with other versions of Mac OS X or other operating systems.
 12. Create the Survey Tool config file
 
     ```bash
-    vim $HOME/.surveytoolrc
+    vim $WORKON_HOME/surveytool/surveytool.config
     
     [Twilio]
     TWILIO_FROM_PHONE_NUMBER = +1XXXYYYY
@@ -95,7 +98,7 @@ These may vary with other versions of Mac OS X or other operating systems.
     password = your-password
     ```
 
-12. Install Postgres database
+13. Install Postgres database
 
     ```bash
     brew install postgresql
@@ -104,7 +107,7 @@ These may vary with other versions of Mac OS X or other operating systems.
     (MysSQL is known to not work.) Follow the installation
     instructions that are printed after the install succeeds.
 
-12. Set up the database
+14. Set up the database
 
     Create database, user, password
     ```bash
@@ -112,30 +115,41 @@ These may vary with other versions of Mac OS X or other operating systems.
     createdb -O surveytool surveytool
     ```
 
-13. Set up the database
+15. Set up the database
 
     ```bash
-    python manage.py syncdb
+    python manage.py syncdb --settings=conf.dev.settings
     ```
 
-14. Set up static resources
+16. Set up static resources
 
     ```bash
     python manage.py collectstatic --settings=conf.dev.settings
     ```
 
-15. Start the server
+17. Start the server
 
    ```bash  
    cd $WORKON_HOME/surveytool/surveytool
    bin/runserver.sh
    ```
 
-16. Create a Profile object for the Admin user - necessary to log in
+18. Create a Profile object for the Admin user - necessary to log in
 
     Now visit http://localhost:8000/admin
 
-17. Log in!
+19. Log in!
 
     Visit http://localhost:8000
+
+
+Ubuntu Linux installation instructions
+======================================
+
+Note that this may work for other Linux distributions, but I have not tested them.
+
+These have been tested on Ubuntu 11.10 Server, Oneiric Ocelot.
+
+(not done yet)
+
 

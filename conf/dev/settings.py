@@ -1,7 +1,7 @@
 import os, ConfigParser
 from  surveytool.settings import *
 
-SURVEYTOOL_CONFIG = os.path.join(os.environ['HOME'], '.surveytoolrc')
+SURVEYTOOL_CONFIG = os.path.join(os.environ['WORKON_HOME'], 'surveytool', 'surveytool.config')
 config = ConfigParser.RawConfigParser()
 config.read(SURVEYTOOL_CONFIG)
 TWILIO_FROM_PHONE_NUMBER = config.get('Twilio', 'TWILIO_FROM_PHONE_NUMBER')
