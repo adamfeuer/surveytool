@@ -284,6 +284,7 @@ def project_messages_csv(request, project_id):
 # Utility functions
 
 def get_messages_for_project_csv_rows(project_id):
+   project = Project.objects.get(pk = project_id)
    sms_messages = Message.objects.filter(project = project_id).order_by('send_at')
    csv_rows = []
    csv_rows.append(['Message ID', 'Project ID', 'Project Name', 'User ID', 'User First Name', 'User Last Name', 'User Phone Number', 'Message Identifier', 'Send At', 'Sent Status'])
