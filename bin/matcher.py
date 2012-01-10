@@ -8,6 +8,10 @@ class Matcher:
    Takes Message Identifier CSV file from Survey Tool and Funnel results CSV
    and combines them using the message identifiers to match up each row.
 
+   Newlines in fields are also removed.
+
+   Output is in tab-delimited format suitable for Excel.
+
    """
    def __init__(self):
       pass
