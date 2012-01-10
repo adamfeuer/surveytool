@@ -24,8 +24,9 @@ class Matcher:
          print row
 
    def writeCsv(self, csvList, filepath):
-      writer = csv.writer(open(filepath, "wb"))
-      writer.writerows(csvList)      
+      writer = csv.writer(open(filepath, "wb"), dialect=csv.excel_tab)
+      for row in csvList:
+         writer.writerow(tuple(s.replace("\n", "") for s in row))      
 
    def getIdPosition(self, headerRow):
       index = 0
