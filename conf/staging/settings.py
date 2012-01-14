@@ -36,7 +36,7 @@ LOGGING = {
         'request_handler': {
                 'level':'INFO',
                 'class':'logging.handlers.RotatingFileHandler',
-                'filename': 'logs/django_request.log',
+                'filename': '/var/log/apache2/research-staging.liveingreatness-django-request.log',
                 'maxBytes': 1024*1024*5, # 5 MB
                 'backupCount': 5,
                 'formatter':'standard',
