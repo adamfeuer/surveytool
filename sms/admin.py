@@ -12,7 +12,7 @@ class ProjectAdmin(admin.ModelAdmin):
               'day_end_time']
 
 class MembershipAdmin(admin.ModelAdmin):
-   fields = ['user', 'project']
+   fields = ['user', 'project', 'messages_generated']
 
 class MessageAdmin(admin.ModelAdmin):
    fields = ['project', 'user_id', 'phone_number', 'email', 'message', 'send_at',

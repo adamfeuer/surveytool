@@ -35,6 +35,7 @@ class Project(models.Model):
 class Membership(models.Model):
    user = models.ForeignKey(User)
    project = models.ForeignKey(Project)
+   messages_generated = models.BooleanField(default=False)
    created = CreationDateTimeField()
    modified = ModificationDateTimeField()
    

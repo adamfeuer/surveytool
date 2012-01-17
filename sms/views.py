@@ -152,6 +152,7 @@ def one_page_signup(request, surveys, signup_form=SignupFormOnePage,
       if form.is_valid():
          user = form.save()
          save_memberships_from_surveys_param(user, surveys)
+         generate_messages_for_user(user)
          redirect_to = reverse('userena_signup_complete',
                                kwargs={'username': user.username})
 
@@ -165,6 +166,15 @@ def one_page_signup(request, surveys, signup_form=SignupFormOnePage,
    return direct_to_template(request,
                              template_name,
                              extra_context=extra_context)
+
+def generate_messages_for_user(user):
+   messageGenerator = MessageGenerator()
+   memberships = Membership.objects.filter(user=user)
+   for membership in memberships:
+      if (membership.messages_generated is False):
+         messageGenerator.generateMessages(membership.user, membership.project)
+         membership.messages_generated = True
+         membership.save()
 
 @login_required
 @user_passes_test(lambda u: u.is_staff)
@@ -246,7 +256,6 @@ def generate_messages(request, project_id):
                              { 'sms_messages' : sms_messages },
                              context_instance=RequestContext(request))
 
-
 @login_required
 @user_passes_test(lambda u: u.is_staff)
 def messages_for_project(request, project_id):
@@ -280,6 +289,24 @@ def project_messages_csv(request, project_id):
     for csv_row in csv_rows:
        writer.writerow(csv_row)
     return response
+
+
+@login_required
+def signup_url(request, username):
+   user = get_object_or_404(User, username__iexact=username)
+   if request.method == 'POST': 
+      form = SignupUrlForm(request.POST) 
+      if form.is_valid():
+         pass
+   else:
+      survey_queryset = get_surveys(user)
+      user_details = get_user_details(user)
+      initial_dict={'surveys' : survey_queryset}
+      form = SurveysForm(initial=initial_dict)  
+     
+   return render_to_response('signup_url.html',
+                             {'form': form },
+                             context_instance=RequestContext(request))
 
 # Utility functions
 
