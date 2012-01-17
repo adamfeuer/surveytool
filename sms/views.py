@@ -388,7 +388,13 @@ def get_intake_survey_url(user, surveys):
    projects = get_projects_from_surveys_param(surveys)
    for project in projects:
       if project_has_intake_survey(project):
-         redirect_url = "%s?%s=%s" % (project.intake_survey_url, project.intake_survey_query_string_parameter, user.id)
+         identifier = MessageGenerator().getIdentifier(project, user)
+         print user, identifier
+         userDetail = UserDetail.objects.filter(user__id = user.id)[0]
+         print userDetail
+         userDetail.intake_survey_identifier = identifier
+         userDetail.save()
+         redirect_url = "%s?%s=%s" % (project.intake_survey_url, project.intake_survey_query_string_parameter, identifier)
          return redirect_url
    return reverse('userena_signup_complete',
                      kwargs={'username': user.username})

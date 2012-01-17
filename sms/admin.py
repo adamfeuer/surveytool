@@ -19,7 +19,7 @@ class MessageAdmin(admin.ModelAdmin):
              'sent', 'sent_status', 'sent_error_message']
 
 class UserDetailAdmin(admin.ModelAdmin):
-   fields = ['user', 'phone_number', 'smartphone', 'no_messages']
+   fields = ['user', 'phone_number', 'smartphone', 'no_messages', 'intake_survey_identifier']
 
 admin.site.register(Setting, SettingAdmin)
 admin.site.register(Project, ProjectAdmin)

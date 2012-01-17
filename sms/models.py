@@ -66,6 +66,7 @@ class UserDetail(models.Model):
    phone_number = models.CharField(max_length=100)
    smartphone = models.BooleanField()
    no_messages = models.BooleanField()
+   intake_survey_identifier = EncryptedCharField(max_length=100, default="")
    created = CreationDateTimeField()
    modified = ModificationDateTimeField()
    
