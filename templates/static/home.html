@@ -12,6 +12,7 @@
          {% url projects as projects_url %}
          {% url messages as messages_url %}
          {% url new_message as new_message_url %}
+         {% url make_signup_url as make_signup_url %}
            <ul>
       	     <li>{% blocktrans %}<a href="{{ send_sms_url }}">Send a text</a>{% endblocktrans %}</li>
               <li>{% blocktrans %}<a href="{{ new_project_url }}">Make a new
@@ -22,6 +23,7 @@
              		a new SMS or Email message </a>{% endblocktrans %} </li>
               <li>{% blocktrans %}<a href="{{ messages_url }}">List
 		            SMS and Email messages </a>{% endblocktrans %} </li>
+              <li>{% blocktrans %}<a href="{{ make_signup_url }}">Make a signup URL</a>{% endblocktrans %} </li>
 	        </ul>
      {% endif %}
    {% endif %}

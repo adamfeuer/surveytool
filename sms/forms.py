@@ -101,3 +101,8 @@ class SignupFormOnePage(SignupFormOnlyEmail):
       userDetail.smartphone = self.cleaned_data['smartphone']
       userDetail.save()
       return user
+
+class SignupUrlForm(forms.Form):
+   surveys = ProjectModelMultipleChoiceField(queryset=Project.objects.all(), required=False)
+
+   

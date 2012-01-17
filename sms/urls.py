@@ -18,4 +18,5 @@ urlpatterns = patterns('',
     (r'^messages_for_project/(?P<project_id>\d+)/$', 'sms.views.messages_for_project'),
     (r'^delete_messages/(?P<project_id>\d+)/$', 'sms.views.delete_messages_for_project'),
     (r'^generate_messages/(?P<project_id>\d+)/$', 'sms.views.generate_messages'),
+    url(r'^make_signup_url$', 'sms.views.make_signup_url', name="make_signup_url"),
 )

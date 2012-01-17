@@ -12,6 +12,9 @@ DATABASE_USER = config.get('Database', 'user')
 DATABASE_PASSWORD = config.get('Database', 'password')
 DATABASE_DB = config.get('Database', 'database')
 
+BASE_URL="http://localhost:8000"
+
+
 STATIC_ROOT = 'static'
 STATIC_URL = '/static/'
 LOGFILE_PATH = 'logs/surveytool.log'

@@ -12,6 +12,8 @@ DATABASE_USER = config.get('Database', 'user')
 DATABASE_PASSWORD = config.get('Database', 'password')
 DATABASE_DB = config.get('Database', 'database')
 
+BASE_URL="http://research.liveingreatness.com"
+
 STATIC_ROOT = '/opt/webapps/research.liveingreatness.com/surveytool/static'
 STATIC_URL = '/static/'
 LOGFILE_PATH = '/opt/webapps/research.liveingreatness.com/logs/surveytool.log'

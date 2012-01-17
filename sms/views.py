@@ -11,10 +11,11 @@ from django.shortcuts import redirect, render_to_response, get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.views.generic.simple import direct_to_template
+from django.conf import settings
 
 from userena.decorators import secure_required
 
-from forms import SmsForm, ProjectForm, SurveysForm, MessageForm, SignupFormOnePage
+from forms import SmsForm, ProjectForm, SurveysForm, MessageForm, SignupFormOnePage, SignupUrlForm
 from models import Project, Membership, Message, UserDetail
 from SmsSender import SmsSender
 from MessageGenerator import MessageGenerator
@@ -167,15 +168,6 @@ def one_page_signup(request, surveys, signup_form=SignupFormOnePage,
                              template_name,
                              extra_context=extra_context)
 
-def generate_messages_for_user(user):
-   messageGenerator = MessageGenerator()
-   memberships = Membership.objects.filter(user=user)
-   for membership in memberships:
-      if (membership.messages_generated is False):
-         messageGenerator.generateMessages(membership.user, membership.project)
-         membership.messages_generated = True
-         membership.save()
-
 @login_required
 @user_passes_test(lambda u: u.is_staff)
 def new_message(request):
@@ -292,23 +284,44 @@ def project_messages_csv(request, project_id):
 
 
 @login_required
-def signup_url(request, username):
-   user = get_object_or_404(User, username__iexact=username)
+@user_passes_test(lambda u: u.is_staff)
+def make_signup_url(request):
    if request.method == 'POST': 
       form = SignupUrlForm(request.POST) 
       if form.is_valid():
-         pass
+         encoded_url = get_signup_url(form)
+         return render_to_response('sms/signup_url.html',
+                                   {'form': form,
+                                    'signup_url': encoded_url },
+                                   context_instance=RequestContext(request))
    else:
-      survey_queryset = get_surveys(user)
-      user_details = get_user_details(user)
-      initial_dict={'surveys' : survey_queryset}
-      form = SurveysForm(initial=initial_dict)  
-     
-   return render_to_response('signup_url.html',
+      initial_dict={}
+      form = SignupUrlForm(initial=initial_dict)       
+   return render_to_response('sms/signup_url.html',
                              {'form': form },
                              context_instance=RequestContext(request))
 
 # Utility functions
+
+def get_signup_url(form):
+   encoded_url = None
+   signup_code=""
+   projects = form.cleaned_data['surveys']
+   if len(projects) > 0:
+      for project in projects:
+         signup_code += "%s," % project.id
+      signup_code = signup_code[:-1]
+      encoded_url = settings.BASE_URL + "/signup/%s" % base64.b16encode(signup_code)
+   return encoded_url
+
+def generate_messages_for_user(user):
+   messageGenerator = MessageGenerator()
+   memberships = Membership.objects.filter(user=user)
+   for membership in memberships:
+      if (membership.messages_generated is False):
+         messageGenerator.generateMessages(membership.user, membership.project)
+         membership.messages_generated = True
+         membership.save()
 
 def get_messages_for_project_csv_rows(project_id):
    project = Project.objects.get(pk = project_id)
@@ -371,7 +384,7 @@ def save_memberships_from_surveys_param(user, surveys):
    return
 
 def get_projects_from_surveys_param(surveys):
-   decodedSurveys = base64.b64decode(surveys)
+   decodedSurveys = base64.b16decode(surveys)
    surveyIds = decodedSurveys.split(',')
    projectIds = [ string.atoi(projectId) for projectId in surveyIds ]
    projects = []

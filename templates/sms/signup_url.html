@@ -1,0 +1,23 @@
+{% extends 'userena/base_userena.html' %}
+{% load i18n %}
+
+{% block content_title %}<h2 class="content-title">Make a signup URL</h2>{% endblock %}
+
+{% block content %}
+
+<form action="" method="post">
+    {% csrf_token %}
+    <fieldset>
+      <legend>{% trans "Select survey projects:" %}</legend>
+        {{ form.as_p }}
+    </fieldset>
+    <input type="submit" value="{% trans "Create URL" %}" />
+</form>
+
+{% if signup_url %}
+Signup URL: <a href="{{ signup_url }}">{{ signup_url }}</a>
+{% else %}
+Select at least 1 survey project.
+{% endif %}
+
+{% endblock %}
