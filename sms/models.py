@@ -25,6 +25,8 @@ class Project(models.Model):
    synchronize_messages = models.BooleanField()
    day_start_time = models.TimeField()
    day_end_time = models.TimeField()
+   intake_survey_url = models.CharField(max_length=500, default="")
+   intake_survey_query_string_parameter = models.CharField(max_length=100, default="")
    members = models.ManyToManyField(User, through='Membership') 
    created = CreationDateTimeField()
    modified = ModificationDateTimeField()

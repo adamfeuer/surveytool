@@ -8,7 +8,13 @@
 <form action="" method="post">
     {% csrf_token %}
     {{ form.as_p }}
+
+{% if has_intake_survey %}
+    <input type="submit" value="{% trans "Sign up and go to next step" %}" />
+{% else %}
     <input type="submit" value="{% trans "Sign up" %}" />
+{% endif %}
+
 </form>
 
 {% endblock %}

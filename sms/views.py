@@ -90,11 +90,13 @@ def edit_project(request, project_id):
                         'guard_time_minutes' : project.guard_time_minutes,
                         'synchronize_messages' : project.synchronize_messages,
                         'day_start_time' : format_time(project.day_start_time),
-                        'day_end_time' : format_time(project.day_end_time)
+                        'day_end_time' : format_time(project.day_end_time),
+                        'intake_survey_url' : project.intake_survey_url,
+                        'intake_survey_query_string_parameter' : project.intake_survey_query_string_parameter,
                         })
    return render_to_response('sms/edit_project.html',
                              {'form': form,
-                              'project' : project },
+                              'project' : project},
                              context_instance=RequestContext(request))
 
 @login_required
@@ -146,7 +148,7 @@ def surveys_select(request, username):
 
 @secure_required
 def one_page_signup(request, surveys, signup_form=SignupFormOnePage,
-           template_name='userena/signup_form.html'):
+           template_name='userena/signup.html'):
    form = SignupFormOnePage(initial = {'smartphone' : True })
    if request.method == 'POST':
       form = signup_form(request.POST, request.FILES)
@@ -154,9 +156,7 @@ def one_page_signup(request, surveys, signup_form=SignupFormOnePage,
          user = form.save()
          save_memberships_from_surveys_param(user, surveys)
          generate_messages_for_user(user)
-         redirect_to = reverse('userena_signup_complete',
-                               kwargs={'username': user.username})
-
+         redirect_to = get_intake_survey_url(user, surveys)
          # A new signed user should logout the old one.
          if request.user.is_authenticated():
             logout(request)
@@ -164,6 +164,7 @@ def one_page_signup(request, surveys, signup_form=SignupFormOnePage,
 
    extra_context = dict()
    extra_context['form'] = form
+   extra_context['has_intake_survey'] = has_intake_survey(surveys)
    return direct_to_template(request,
                              template_name,
                              extra_context=extra_context)
@@ -383,6 +384,25 @@ def save_memberships_from_surveys_param(user, surveys):
    save_memberships_for_projects(user, projects)
    return
 
+def get_intake_survey_url(user, surveys):
+   projects = get_projects_from_surveys_param(surveys)
+   for project in projects:
+      if project_has_intake_survey(project):
+         redirect_url = "%s?%s=%s" % (project.intake_survey_url, project.intake_survey_query_string_parameter, user.id)
+         return redirect_url
+   return reverse('userena_signup_complete',
+                     kwargs={'username': user.username})
+
+def has_intake_survey(surveys):
+   projects = get_projects_from_surveys_param(surveys)
+   for project in projects:
+      if project_has_intake_survey(project):
+         return True
+   return None
+
+def project_has_intake_survey(project):
+   return (len(project.intake_survey_url) > 0 and len(project.intake_survey_query_string_parameter) > 0)
+
 def get_projects_from_surveys_param(surveys):
    decodedSurveys = base64.b16decode(surveys)
    surveyIds = decodedSurveys.split(',')
@@ -414,6 +434,8 @@ def save_project_from_form(project, form):
    project.synchronize_messages = clean_boolean(form.cleaned_data['synchronize_messages'])
    project.day_start_time = clean_time(form.cleaned_data['day_start_time'])
    project.day_end_time = clean_time(form.cleaned_data['day_end_time'])
+   project.intake_survey_url = form.cleaned_data['intake_survey_url']
+   project.intake_survey_query_string_parameter = form.cleaned_data['intake_survey_query_string_parameter']
    project.save()
    return
 

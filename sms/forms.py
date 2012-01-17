@@ -46,6 +46,8 @@ class ProjectForm(forms.Form):
    synchronize_messages = forms.BooleanField(required=False)
    day_start_time = get_time_field()
    day_end_time = get_time_field()
+   intake_survey_url = forms.CharField(max_length=500, required=False)
+   intake_survey_query_string_parameter = forms.CharField(max_length=100, required=False)
 
 
 class SurveysForm(forms.Form):
