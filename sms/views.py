@@ -150,17 +150,21 @@ def surveys_select(request, username):
 def one_page_signup(request, surveys, signup_form=SignupFormOnePage,
            template_name='userena/signup.html'):
    form = SignupFormOnePage(initial = {'smartphone' : True })
-   if request.method == 'POST':
-      form = signup_form(request.POST, request.FILES)
-      if form.is_valid():
-         user = form.save()
-         save_memberships_from_surveys_param(user, surveys)
-         generate_messages_for_user(user)
-         redirect_to = get_intake_survey_url(user, surveys)
-         # A new signed user should logout the old one.
-         if request.user.is_authenticated():
-            logout(request)
-         return redirect(redirect_to)
+   projects = get_projects_from_surveys_param(surveys)
+   if len(projects) > 0:
+      if request.method == 'POST':
+         form = signup_form(request.POST, request.FILES)
+         if form.is_valid():
+            user = form.save()
+            save_memberships_from_surveys_param(user, surveys)
+            generate_messages_for_user(user)
+            redirect_to = get_intake_survey_url(user, surveys)
+            # A new signed user should logout the old one.
+            if request.user.is_authenticated():
+               logout(request)
+            return redirect(redirect_to)
+   else:
+      return redirect("/")
 
    extra_context = dict()
    extra_context['form'] = form
@@ -380,9 +384,9 @@ def save_memberships_from_form(user, form):
 
 def save_memberships_from_surveys_param(user, surveys):
    projects = get_projects_from_surveys_param(surveys)
-   delete_memberships_for_user(user)
-   save_memberships_for_projects(user, projects)
-   return
+   if len(projects) > 0:
+      delete_memberships_for_user(user)
+      save_memberships_for_projects(user, projects)
 
 def get_intake_survey_url(user, surveys):
    projects = get_projects_from_surveys_param(surveys)
@@ -410,13 +414,16 @@ def project_has_intake_survey(project):
    return (len(project.intake_survey_url) > 0 and len(project.intake_survey_query_string_parameter) > 0)
 
 def get_projects_from_surveys_param(surveys):
-   decodedSurveys = base64.b16decode(surveys)
-   surveyIds = decodedSurveys.split(',')
-   projectIds = [ string.atoi(projectId) for projectId in surveyIds ]
-   projects = []
-   for projectId in projectIds:
-      projects.append(Project.objects.get(pk=projectId))
-   return projects
+   try:
+      decodedSurveys = base64.b16decode(surveys)
+      surveyIds = decodedSurveys.split(',')
+      projectIds = [ string.atoi(projectId) for projectId in surveyIds ]
+      projects = []
+      for projectId in projectIds:
+         projects.append(Project.objects.get(pk=projectId))
+      return projects
+   except TypeError:
+      return []
 
 def delete_memberships_for_user(user):
    memberships = Membership.objects.filter(user = user.id)
