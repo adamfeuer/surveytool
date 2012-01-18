@@ -1,13 +1,10 @@
 from fabric.api import *
+from fabric.operations import _prefix_commands, _prefix_env_vars
 
 """
 Base configuration
 """
 env.project_name = 'surveytool'
-env.database_password = '$(db_password)'
-env.python = 'python2.7'
-env.hosts = []
-env.user = "$(user)"
 
 """
 Environments
@@ -35,7 +32,7 @@ def staging():
 def common_environment_settings():
     env.env_path = '/opt/webapps/%(hostname)s' % env
     env.log_path = '/opt/webapps/%(hostname)s/logs' % env
-    env.repo_path = '%(env_path)s/%(project_name)s' % env
+    env.proj_root = '%(env_path)s/%(project_name)s' % env
     env.apache_config_path = '/etc/apache2/sites-available/%(hostname)s' % env
     
 """
@@ -78,7 +75,7 @@ def setup():
     destroy_database()
     create_database()
     load_data()
-    install_requirements()
+    update_requirements()
     install_apache_conf()
 
 def setup_directories():
@@ -102,25 +99,25 @@ def clone_repo():
     """
     Do initial clone of the git repository.
     """
-    sshagent_run('git clone git@github.com:adamfeuer/%(project_name)s.git %(repo_path)s' % env)
+    sshagent_run('git clone git@github.com:adamfeuer/%(project_name)s.git %(proj_root)s' % env)
 
 def checkout_latest():
     """
     Pull the latest code on the specified branch.
     """
-    sshagent_run('cd %(repo_path)s; git checkout %(branch)s; git pull origin %(branch)s' % env)
+    sshagent_run('cd %(proj_root)s; git checkout %(branch)s; git pull origin %(branch)s' % env)
 
-def install_requirements():
+def update_requirements():
     """
     Install the required packages using pip.
     """
-    sshagent_run('source %(env_path)s/bin/activate; pip install -E %(env_path)s -r %(repo_path)s/requirements.pip' % env)
+    ve_run("pip install -r %(proj_root)s/requirements.pip" % env)
 
 def install_apache_conf():
     """
     Install the apache site config file.
     """
-    sudo('cp %(repo_path)s/%(project_name)s/configs/%(settings)s/%(project_name)s %(apache_config_path)s' % env)
+    sudo('cp %(proj_root)s/%(project_name)s/configs/%(settings)s/%(project_name)s %(apache_config_path)s' % env)
 
 """
 Commands - deployment
@@ -144,10 +141,10 @@ def maintenance_up():
     """
     Install the Apache maintenance configuration.
     """
-    #sudo('cp %(repo_path)s/%(project_name)s/configs/%(settings)s/%(project_name)s_maintenance %(apache_config_path)s' % env)
-    reboot()
+    #sudo('cp %(proj_root)s/%(project_name)s/configs/%(settings)s/%(project_name)s_maintenance %(apache_config_path)s' % env)
+    restart()
 
-def reboot(): 
+def restart(): 
     """
     Restart the Apache2 server.
     """
@@ -159,7 +156,7 @@ def maintenance_down():
     Reinstall the normal site configuration.
     """
     #install_apache_conf()
-    reboot()
+    restart()
     
 """
 Commands - rollback
@@ -184,7 +181,7 @@ def git_reset(commit_id):
     Reset the git repository to an arbitrary commit hash or tag.
     """
     env.commit_id = commit_id
-    sshagent_run("cd %(repo_path)s; git reset --hard %(commit_id)s" % env)
+    sshagent_run("cd %(proj_root)s; git reset --hard %(commit_id)s" % env)
 
 """
 Commands - data
@@ -229,33 +226,19 @@ def load_data():
 Commands - miscellaneous
 """
 
-def migrate():
-    with cd(env.repo_path):
-        ve_run("%(repo_path)s/bin/manage.py migrate --settings=%(manage_settings)s" % env)
+def version():
+    """Show last commit to repo on server"""
+    with cd(env.proj_root):
+        sshagent_run('git log -1')
+
+def syncdb():
+    with cd(env.proj_root):
+        ve_run("%(proj_root)s/bin/manage.py syncdb --migrate --settings=%(manage_settings)s" % env)
 
 def reset_permissions():
     env.user = 'root'
     sudo("chown -R www-data:www-data %(env_path)s" % env)
     sudo("chown -R www-data:www-data /var/log/apache2")
-
-def test_local(): 
-    """
-    Test echo on localhost. Reports the git user settings and the environment $SHELL variable.
-    """
-    git_username = local('git config --global --get user.name', capture=True)
-    local("echo 'Git User: "+git_username+"'")
-    local('echo "Current Shell: $SHELL"')
-
-
-def test_remote(user='root'): 
-    """
-    Test a remote host, takes user account login name as a single argument
-    """
-    env.host_string = user+'@'+env.hostname
-
-    git_username    = run('git config --global --get user.name')
-    run("echo 'Git User: "+git_username+"'")
-    run('echo "Current Shell: $SHELL"')
 
 def echo_host():
     """
@@ -269,10 +252,10 @@ Commands - convenience
 
 def update():
     checkout_latest()
-    install_requirements()
-    migrate()
+    update_requirements()
+    syncdb()
     reset_permissions()
-    reboot()
+    restart()
 
 """
 Deaths, destroyers of worlds
@@ -287,7 +270,7 @@ def shiva_the_destroyer():
         sshagent_run('dropdb %(project_name)s' % env)
         sshagent_run('dropuser %(project_name)s' % env)
         sudo('rm %(apache_config_path)s' % env)
-        reboot()
+        restart()
         sshagent_run('s3cmd del --recursive s3://%(s3_bucket)s/%(project_name)s' % env)
 
 def host_type():
@@ -316,16 +299,18 @@ def sshagent_run(cmd):
     """
     Helper function.
     Runs a command with SSH agent forwarding enabled.
-    
-    Note:: Fabric (and paramiko) can't forward your SSH agent. 
+
+    Note:: Fabric (and paramiko) can't forward your SSH agent.
     This helper uses your system's ssh to do so.
     """
-
-    for h in env.hosts:
-        try:
-            # catch the port number to pass to ssh
-            host, port = h.split(':')
-            local('ssh -p %s -A %s "%s"' % (port, host, cmd))
-        except ValueError:
-            local('ssh -A %s "%s"' % (h, cmd))
-
+    # Handle context manager modifications
+    wrapped_cmd = _prefix_commands(_prefix_env_vars(cmd), 'remote')
+    try:
+        host, port = env.host_string.split(':')
+        return local(
+            "ssh -p %s -A %s@%s '%s'" % (port, env.user, host, wrapped_cmd)
+        )
+    except ValueError:
+        return local(
+            "ssh -A %s@%s '%s'" % (env.user, env.host_string, wrapped_cmd)
+        )
