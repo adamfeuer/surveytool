@@ -112,7 +112,7 @@ def install_requirements():
     """
     Install the required packages using pip.
     """
-    sshagent_run('source %(env_path)s/bin/activate; pip install -E %(env_path)s -r %(repo_path)s/requirements.txt' % env)
+    sshagent_run('source %(env_path)s/bin/activate; pip install -E %(env_path)s -r %(repo_path)s/requirements.pip' % env)
 
 def install_apache_conf():
     """
@@ -228,6 +228,7 @@ Commands - miscellaneous
 """
 
 def reset_permissions():
+    env.user = 'root'
     sudo("chown -R www-data:www-data %(env_path)s" % env)
     sudo("chown -R www-data:www-data /var/log/apache2")
 
