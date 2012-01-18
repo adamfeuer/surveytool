@@ -16,25 +16,27 @@ def production():
     """
     Work on production environment
     """
-    env.settings = 'production' 
+    env.settings = 'production'
+    env.manage_settings = 'conf.prod.settings'
     env.hostname = 'research.liveingreatness.com'
-    env.env_path = '/opt/webapps/%(hostname)s' % env
-    env.log_path = '/opt/webapps/%(hostname)s/logs' % env
-    env.repo_path = '%(env_path)s/%(project_name)s' % env
-    env.apache_config_path = '/etc/apache2/sites-available/%(hostname)s' % env
     env.hosts = ['research.liveingreatness.com']
+    common_environment_settings()
 
 def staging():
     """
     Work on staging environment
     """
     env.settings = 'staging'
+    env.manage_settings = 'conf.staging.settings'
     env.hostname = 'research-staging.liveingreatness.com' 
+    env.hosts = ['research-staging.liveingreatness.com'] 
+    common_environment_settings()
+
+def common_environment_settings():
     env.env_path = '/opt/webapps/%(hostname)s' % env
     env.log_path = '/opt/webapps/%(hostname)s/logs' % env
     env.repo_path = '%(env_path)s/%(project_name)s' % env
     env.apache_config_path = '/etc/apache2/sites-available/%(hostname)s' % env
-    env.hosts = ['research-staging.liveingreatness.com'] 
     
 """
 Branches
@@ -227,6 +229,10 @@ def load_data():
 Commands - miscellaneous
 """
 
+def migrate():
+    with cd(env.repo_path):
+        ve_run("%(repo_path)s/bin/manage.py migrate --settings=%(manage_settings)s" % env)
+
 def reset_permissions():
     env.user = 'root'
     sudo("chown -R www-data:www-data %(env_path)s" % env)
@@ -264,6 +270,7 @@ Commands - convenience
 def update():
     checkout_latest()
     install_requirements()
+    migrate()
     reset_permissions()
     reboot()
 
@@ -295,6 +302,15 @@ def _execute_psql(query):
     """
     env.query = query
     sshagent_run(('cd %(path)s/repository; psql -q %(project_name)s -c "%(query)s"') % env)
+
+
+def ve_run(cmd):
+    """
+    Helper function.
+    Runs a command using the virtualenv environment
+    """
+    require('env_path')
+    return sshagent_run('source %s/bin/activate; %s' % (env.env_path, cmd))
 
 def sshagent_run(cmd):
     """
