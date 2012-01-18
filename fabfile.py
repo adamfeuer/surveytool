@@ -228,9 +228,8 @@ Commands - miscellaneous
 """
 
 def reset_permissions():
-    env.host_string = 'root@'+env.hostname
-    run("chown -R www-data:www-data %(env_path)s" % env)
-    run("chown -R www-data:www-data /var/log/apache2")
+    sudo("chown -R www-data:www-data %(env_path)s" % env)
+    sudo("chown -R www-data:www-data /var/log/apache2")
 
 def test_local(): 
     """
