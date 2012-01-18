@@ -4,13 +4,7 @@ from fabric.api import *
 Base configuration
 """
 env.project_name = 'surveytool'
-env.hostname = 'research.liveingreatness.com'
 env.database_password = '$(db_password)'
-env.path = '/opt/webapps/%(hostname)s' % env
-env.log_path = '/opt/webapps/%(hostname)s/logs' % env
-env.env_path = env.path
-env.repo_path = '%(path)s/%(project_name)s' % env
-env.apache_config_path = '/etc/apache2/sites-available/%(hostname)s' % env
 env.python = 'python2.7'
 env.hosts = []
 env.user = "$(user)"
@@ -22,7 +16,12 @@ def production():
     """
     Work on production environment
     """
-    env.settings = 'production'
+    env.settings = 'production' 
+    env.hostname = 'research.liveingreatness.com'
+    env.env_path = '/opt/webapps/%(hostname)s' % env
+    env.log_path = '/opt/webapps/%(hostname)s/logs' % env
+    env.repo_path = '%(env_path)s/%(project_name)s' % env
+    env.apache_config_path = '/etc/apache2/sites-available/%(hostname)s' % env
     env.hosts = ['research.liveingreatness.com']
 
 def staging():
@@ -30,6 +29,11 @@ def staging():
     Work on staging environment
     """
     env.settings = 'staging'
+    env.hostname = 'research-staging.liveingreatness.com' 
+    env.env_path = '/opt/webapps/%(hostname)s' % env
+    env.log_path = '/opt/webapps/%(hostname)s/logs' % env
+    env.repo_path = '%(env_path)s/%(project_name)s' % env
+    env.apache_config_path = '/etc/apache2/sites-available/%(hostname)s' % env
     env.hosts = ['research-staging.liveingreatness.com'] 
     
 """
@@ -145,7 +149,8 @@ def reboot():
     """
     Restart the Apache2 server.
     """
-    sudo('service restart apache')
+    env.host_string = 'root@'+env.hostname
+    run('service apache2 restart')
     
 def maintenance_down():
     """
@@ -221,7 +226,31 @@ def load_data():
 """
 Commands - miscellaneous
 """
-    
+
+def reset_permissions():
+    env.host_string = 'root@'+env.hostname
+    run("chown -R www-data:www-data %(env_path)s" % env)
+    run("chown -R www-data:www-data /var/log/apache2")
+
+def test_local(): 
+    """
+    Test echo on localhost. Reports the git user settings and the environment $SHELL variable.
+    """
+    git_username = local('git config --global --get user.name', capture=True)
+    local("echo 'Git User: "+git_username+"'")
+    local('echo "Current Shell: $SHELL"')
+
+
+def test_remote(user='root'): 
+    """
+    Test a remote host, takes user account login name as a single argument
+    """
+    env.host_string = user+'@'+env.hostname
+
+    git_username    = run('git config --global --get user.name')
+    run("echo 'Git User: "+git_username+"'")
+    run('echo "Current Shell: $SHELL"')
+
 def echo_host():
     """
     Echo the current host to the command line.
