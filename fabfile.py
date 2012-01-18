@@ -258,6 +258,16 @@ def echo_host():
     sshagent_run('echo %(settings)s; echo %(hosts)s' % env)
 
 """
+Commands - convenience
+"""
+
+def update():
+    checkout_latest()
+    install_requirements()
+    reset_permissions()
+    reboot()
+
+"""
 Deaths, destroyers of worlds
 """
 def shiva_the_destroyer():
