@@ -5,7 +5,7 @@ from fabric.operations import _prefix_commands, _prefix_env_vars
 Base configuration
 """
 env.project_name = 'surveytool'
-
+env.apache_config_path = '/etc/apache2/sites-available'
 """
 Environments
 """
@@ -33,7 +33,6 @@ def common_environment_settings():
     env.env_path = '/opt/webapps/%(hostname)s' % env
     env.log_path = '/opt/webapps/%(hostname)s/logs' % env
     env.proj_root = '%(env_path)s/%(project_name)s' % env
-    env.apache_config_path = '/etc/apache2/sites-available/%(hostname)s' % env
     
 """
 Branches
@@ -117,7 +116,8 @@ def install_apache_conf():
     """
     Install the apache site config file.
     """
-    sudo('cp %(proj_root)s/%(project_name)s/configs/%(settings)s/%(project_name)s %(apache_config_path)s' % env)
+    with settings(user = 'root'):
+        run('cp %(proj_root)s/apache/%(hostname)s %(apache_config_path)s' % env)
 
 """
 Commands - deployment
@@ -133,29 +133,34 @@ def deploy():
     
     with settings(warn_only=True):
         maintenance_up()
-        
+
     checkout_latest()
+    update_requirements()
+    syncdb()
+    reset_permissions()
+
     maintenance_down()
     
 def maintenance_up():
     """
     Install the Apache maintenance configuration.
     """
-    #sudo('cp %(proj_root)s/%(project_name)s/configs/%(settings)s/%(project_name)s_maintenance %(apache_config_path)s' % env)
+    with settings(user = 'root'):
+        run('cp %(proj_root)s/apache/%(hostname)s-maintenance %(apache_config_path)s/%(hostname)s' % env)
     restart()
 
 def restart(): 
     """
     Restart the Apache2 server.
     """
-    env.host_string = 'root@'+env.hostname
-    run('service apache2 restart')
+    with settings(user = 'root'):
+        run('service apache2 restart')
     
 def maintenance_down():
     """
     Reinstall the normal site configuration.
     """
-    #install_apache_conf()
+    install_apache_conf()
     restart()
     
 """
@@ -236,26 +241,15 @@ def syncdb():
         ve_run("%(proj_root)s/bin/manage.py syncdb --migrate --settings=%(manage_settings)s" % env)
 
 def reset_permissions():
-    env.user = 'root'
-    sudo("chown -R www-data:www-data %(env_path)s" % env)
-    sudo("chown -R www-data:www-data /var/log/apache2")
+    with settings(user = 'root'):
+        sudo("chown -R www-data:www-data %(env_path)s" % env)
+        sudo("chown -R www-data:www-data /var/log/apache2")
 
 def echo_host():
     """
     Echo the current host to the command line.
     """
     sshagent_run('echo %(settings)s; echo %(hosts)s' % env)
-
-"""
-Commands - convenience
-"""
-
-def update():
-    checkout_latest()
-    update_requirements()
-    syncdb()
-    reset_permissions()
-    restart()
 
 """
 Deaths, destroyers of worlds
