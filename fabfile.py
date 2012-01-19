@@ -6,21 +6,6 @@ Base configuration
 """
 env.project_name = 'surveytool'
 env.apache_config_path = '/etc/apache2/sites-available'
-env.team_groupname   = 'webdevelopers'
-env.team_sudo_cmds = [
-    "/usr/sbin/a2ensite",
-    "/usr/sbin/a2dissite",
-    "/usr/sbin/a2enmod",
-    "/usr/sbin/a2dismod",
-    "/usr/sbin/service nginx start",
-    "/usr/sbin/service nginx stop",
-    "/usr/sbin/service nginx restart",
-    "/usr/sbin/service apache2 restart",
-    "/usr/sbin/service apache2 reload",
-    "/usr/sbin/service apache2 start",
-    "/usr/sbin/service apache2 stop"
-]
-
 
 """
 Environments
