@@ -34,7 +34,12 @@
 
      <form action="/sms/project_messages_csv/{{form.id.value}}/" method="post">
         {% csrf_token %}
-     <p><input type="submit" value="Download Identifer CSV file" /></p>
+     <p><input type="submit" value="Download Message Identifer CSV file" /></p>
+     </form>
+
+     <form action="/sms/project_intake_ids_csv/{{form.id.value}}/" method="post">
+        {% csrf_token %}
+     <p><input type="submit" value="Download Intake Identifer CSV file" /></p>
      </form>
 
      <p>&nbsp;</p>

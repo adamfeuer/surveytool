@@ -276,17 +276,12 @@ def delete_messages_for_project(request, project_id):
 @login_required
 @user_passes_test(lambda u: u.is_staff)
 def project_messages_csv(request, project_id):
-    project = Project.objects.get(pk = project_id)
-    filename = "messages-%s" % project.name
-    filename = filename.replace(' ', '-').lower()
-    csv_rows = get_messages_for_project_csv_rows(project_id)
-    response = HttpResponse(mimetype='text/csv')
-    response['Content-Disposition'] = 'attachment; filename=%s' % filename
-    writer = csv.writer(response)
-    for csv_row in csv_rows:
-       writer.writerow(csv_row)
-    return response
+    return send_csv("messages", request, project_id, get_messages_for_project_csv_rows)
 
+@login_required
+@user_passes_test(lambda u: u.is_staff)
+def project_intake_ids_csv(request, project_id):
+    return send_csv("intake-ids", request, project_id, get_intake_ids_for_project_csv_rows)
 
 @login_required
 @user_passes_test(lambda u: u.is_staff)
@@ -307,6 +302,23 @@ def make_signup_url(request):
                              context_instance=RequestContext(request))
 
 # Utility functions
+
+def send_csv(basename, request, project_id, csv_generator_function):
+    project = Project.objects.get(pk = project_id)
+    filename = get_csv_filename(basename, project)
+    csv_rows = csv_generator_function(project_id)
+    response = HttpResponse(mimetype='text/csv')
+    response['Content-Disposition'] = 'attachment; filename=%s' % filename
+    writer = csv.writer(response)
+    for csv_row in csv_rows:
+       writer.writerow(csv_row)
+    return response
+
+def get_csv_filename(basename, project):
+    timestamp = datetime.datetime.now().strftime("%Y-%m-%d-%H%M-%S")
+    filename = "%s-%s-%s" % (basename, project.name, timestamp)
+    filename = filename.replace(' ', '-').lower()
+    return filename
 
 def get_signup_url(form):
    encoded_url = None
@@ -332,7 +344,7 @@ def get_messages_for_project_csv_rows(project_id):
    project = Project.objects.get(pk = project_id)
    sms_messages = Message.objects.filter(project = project_id).order_by('send_at')
    csv_rows = []
-   csv_rows.append(['Message ID', 'Project ID', 'Project Name', 'User ID', 'User First Name', 'User Last Name', 'User Phone Number', 'Message Identifier', 'Send At', 'Sent Status'])
+   csv_rows.append(['Message ID', 'Project ID', 'Project Name', 'User ID', 'User First Name', 'User Last Name', 'User Phone Number', 'Identifier', 'Send At', 'Sent Status'])
    for sms_message in sms_messages:
       user = User.objects.get(pk = sms_message.user_id)
       csv_row = []
@@ -346,7 +358,25 @@ def get_messages_for_project_csv_rows(project_id):
       csv_row.append(sms_message.identifier)
       csv_row.append(sms_message.send_at)
       csv_row.append(sms_message.sent_status)
-      print csv_row
+      csv_rows.append(csv_row)
+   return csv_rows
+
+def get_intake_ids_for_project_csv_rows(project_id):
+   project = Project.objects.get(pk = project_id)
+   memberships = Membership.objects.filter(project = project_id).order_by('created')
+   csv_rows = []
+   csv_rows.append(['Project ID', 'Project Name', 'User ID', 'User First Name', 'User Last Name', 'User Phone Number', 'Identifier'])
+   for membership in memberships:
+      user = User.objects.get(pk = membership.user.id)
+      userDetail = UserDetail.objects.filter(user = user.id)[0]
+      csv_row = []
+      csv_row.append(project.id)
+      csv_row.append(project.name)
+      csv_row.append(user.id)
+      csv_row.append(user.first_name)
+      csv_row.append(user.last_name)
+      csv_row.append(userDetail.phone_number)
+      csv_row.append(userDetail.intake_survey_identifier)
       csv_rows.append(csv_row)
    return csv_rows
 

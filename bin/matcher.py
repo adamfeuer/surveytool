@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import sys, os, csv
 
-USER_ID = "Message Identifier"
+IDENTIFIER = "Identifier"
 
 class Matcher:
    """
@@ -35,10 +35,10 @@ class Matcher:
    def getIdPosition(self, headerRow):
       index = 0
       for item in headerRow:
-         if item == USER_ID:
+         if item == IDENTIFIER:
             return index
          index += 1
-      raise Exception('Did not find user id header.')
+      raise Exception('Did not find %s header.' % IDENTIFIER)
 
    def removeColumn(self, rows, columnToRemove):
       result = []
@@ -47,7 +47,7 @@ class Matcher:
       return result
 
    def usage(self):
-      print "Usage: %s [Survey Tool message identifier CSV] [Funnel results CSV] [output file]" % os.path.basename(sys.argv[0])
+      print "Usage: %s [Survey Tool identifier CSV] [Funnel results CSV] [output file]" % os.path.basename(sys.argv[0])
 
    def parseArgs(self):
       if len(sys.argv) != 4:
