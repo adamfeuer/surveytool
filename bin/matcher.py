@@ -28,7 +28,7 @@ class Matcher:
          print row
 
    def writeCsv(self, csvList, filepath):
-      writer = csv.writer(open(filepath, "wb"), dialect=csv.excel_tab)
+      writer = csv.writer(open(filepath, "wb"))
       for row in csvList:
          writer.writerow(tuple(s.replace("\n", "") for s in row))      
 

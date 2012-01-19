@@ -1,4 +1,4 @@
-import datetime, logging, time, base64, string, csv
+import datetime, logging, time, base64, string, csv, re
 
 from django.core.context_processors import csrf
 from django.core.urlresolvers import reverse
@@ -316,8 +316,10 @@ def send_csv(basename, request, project_id, csv_generator_function):
 
 def get_csv_filename(basename, project):
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d-%H%M-%S")
-    filename = "%s-%s-%s" % (basename, project.name, timestamp)
-    filename = filename.replace(' ', '-').lower()
+    clean_project_name = re.sub('[ ]', '_', project.name).lower()
+    clean_project_name = re.sub('[\W]', '', clean_project_name)
+    clean_project_name = re.sub('[_]', '-', clean_project_name)
+    filename = "%s-%s-%s" % (basename, clean_project_name, timestamp)
     return filename
 
 def get_signup_url(form):
