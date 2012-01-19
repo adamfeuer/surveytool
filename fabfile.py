@@ -6,6 +6,22 @@ Base configuration
 """
 env.project_name = 'surveytool'
 env.apache_config_path = '/etc/apache2/sites-available'
+env.team_groupname   = 'webdevelopers'
+env.team_sudo_cmds = [
+    "/usr/sbin/a2ensite",
+    "/usr/sbin/a2dissite",
+    "/usr/sbin/a2enmod",
+    "/usr/sbin/a2dismod",
+    "/usr/sbin/service nginx start",
+    "/usr/sbin/service nginx stop",
+    "/usr/sbin/service nginx restart",
+    "/usr/sbin/service apache2 restart",
+    "/usr/sbin/service apache2 reload",
+    "/usr/sbin/service apache2 start",
+    "/usr/sbin/service apache2 stop"
+]
+
+
 """
 Environments
 """
@@ -116,8 +132,7 @@ def install_apache_conf():
     """
     Install the apache site config file.
     """
-    with settings(user = 'root'):
-        run('cp %(proj_root)s/apache/%(hostname)s %(apache_config_path)s' % env)
+    sudo('cp %(proj_root)s/apache/%(hostname)s %(apache_config_path)s' % env)
 
 """
 Commands - deployment
@@ -145,16 +160,14 @@ def maintenance_up():
     """
     Install the Apache maintenance configuration.
     """
-    with settings(user = 'root'):
-        run('cp %(proj_root)s/apache/%(hostname)s-maintenance %(apache_config_path)s/%(hostname)s' % env)
+    sudo('cp %(proj_root)s/apache/%(hostname)s-maintenance %(apache_config_path)s/%(hostname)s' % env)
     restart()
 
 def restart(): 
     """
     Restart the Apache2 server.
     """
-    with settings(user = 'root'):
-        run('service apache2 restart')
+    sudo('service apache2 restart')
     
 def maintenance_down():
     """
@@ -241,9 +254,8 @@ def syncdb():
         ve_run("%(proj_root)s/bin/manage.py syncdb --migrate --settings=%(manage_settings)s" % env)
 
 def reset_permissions():
-    with settings(user = 'root'):
-        sudo("chown -R www-data:www-data %(env_path)s" % env)
-        sudo("chown -R www-data:www-data /var/log/apache2")
+    sudo("chown -R www-data:www-data %(env_path)s" % env)
+    sudo("chown -R www-data:www-data /var/log/apache2")
 
 def echo_host():
     """
@@ -269,17 +281,6 @@ def shiva_the_destroyer():
 
 def host_type():
     sshagent_run('uname -s')
-
-"""
-Utility functions (not to be called directly)
-"""
-def _execute_psql(query):
-    """
-    Executes a PostgreSQL command using the command line interface.
-    """
-    env.query = query
-    sshagent_run(('cd %(path)s/repository; psql -q %(project_name)s -c "%(query)s"') % env)
-
 
 def ve_run(cmd):
     """
